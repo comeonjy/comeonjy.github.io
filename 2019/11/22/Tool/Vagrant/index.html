@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="true"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.4.2',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":true,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":true,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="背景最近准备学习K8S了，为了搭建一个Linux集群，于是用到了Vagrant这个工具。官方文档：https:&#x2F;&#x2F;www.vagrantup.com&#x2F;docs&#x2F;index.htmlVagrant介绍Vagrant就是为了方便地实现虚拟化环境而设计的，使用Rube开发，基于VirtualBox，可以很方便的建立起一个虚拟环境，并且具有跨平台，可移动，自动化部署等优点">
+<meta name="keywords" content="vagrant">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vagrant">
+<meta property="og:url" content="http:&#x2F;&#x2F;blog.jiangyang.me&#x2F;2019&#x2F;11&#x2F;22&#x2F;Tool&#x2F;Vagrant&#x2F;index.html">
+<meta property="og:site_name" content="孤独的风中一匹狼">
+<meta property="og:description" content="背景最近准备学习K8S了，为了搭建一个Linux集群，于是用到了Vagrant这个工具。官方文档：https:&#x2F;&#x2F;www.vagrantup.com&#x2F;docs&#x2F;index.htmlVagrant介绍Vagrant就是为了方便地实现虚拟化环境而设计的，使用Rube开发，基于VirtualBox，可以很方便的建立起一个虚拟环境，并且具有跨平台，可移动，自动化部署等优点">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-01T04:34:07.143Z">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://blog.jiangyang.me/2019/11/22/Tool/Vagrant/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Vagrant | 孤独的风中一匹狼</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">孤独的风中一匹狼</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">13</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">9</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">16</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+  <a href="https://github.com/comeonjy" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/11/22/Tool/Vagrant/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.jpeg">
+      <meta itemprop="name" content="江杨">
+      <meta itemprop="description" content="comeonjy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="孤独的风中一匹狼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Vagrant
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-11-22 19:28:46" itemprop="dateCreated datePublished" datetime="2019-11-22T19:28:46+08:00">2019-11-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-01 12:34:07" itemprop="dateModified" datetime="2020-03-01T12:34:07+08:00">2020-03-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tool/" itemprop="url" rel="index">
+                    <span itemprop="name">Tool</span>
+                  </a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/11/22/Tool/Vagrant/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/22/Tool/Vagrant/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近准备学习K8S了，为了搭建一个Linux集群，于是用到了Vagrant这个工具。</p><p>官方文档：<a href="https://www.vagrantup.com/docs/index.html" target="_blank" rel="noopener">https://www.vagrantup.com/docs/index.html</a></p><h2 id="Vagrant介绍"><a href="#Vagrant介绍" class="headerlink" title="Vagrant介绍"></a>Vagrant介绍</h2><p>Vagrant就是为了方便地实现虚拟化环境而设计的，使用Rube开发，基于VirtualBox，可以很方便的建立起一个虚拟环境，并且具有跨平台，可移动，自动化部署等优点</p><a id="more"></a>
+
+
+<ul>
+<li>建立和删除虚拟机</li>
+<li>配置虚拟机运行参数</li>
+<li>管理虚拟机运行状态</li>
+<li>自动配置和安装开发环境</li>
+<li>打包和分发虚拟机运行环境</li>
+</ul>
+<h2 id="Vagrant安装"><a href="#Vagrant安装" class="headerlink" title="Vagrant安装"></a>Vagrant安装</h2><p>virtualbox官网下载地址 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">https://www.virtualbox.org/wiki/Downloads</a></p>
+<p>vagrant官网下载地址 <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="noopener">https://www.vagrantup.com/downloads.html</a></p>
+<p>下载安装即可</p>
+<h2 id="Vagrant基本命令"><a href="#Vagrant基本命令" class="headerlink" title="Vagrant基本命令"></a>Vagrant基本命令</h2><ul>
+<li><p>添加box镜像到本地环境（box_url可以是本地资源路径或远程下载地址）</p>
+<p>Box下载地址 <a href="http://www.vagrantbox.es/" target="_blank" rel="noopener">http://www.vagrantbox.es/</a></p>
+</li>
+</ul>
+<blockquote>
+<p>vagrant  box  add  [ box_name ]  [ box_url ]</p>
+</blockquote>
+<ul>
+<li>列出本地镜像列表</li>
+</ul>
+<blockquote>
+<p>vagrant  box  list</p>
+</blockquote>
+<ul>
+<li>更新本地box</li>
+</ul>
+<blockquote>
+<p>vagrant  box  update  [ box_name ]</p>
+</blockquote>
+<ul>
+<li>删除box</li>
+</ul>
+<blockquote>
+<p>vagrant  box  remove  [ box_name ]</p>
+</blockquote>
+<ul>
+<li>空文件夹初始化虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant init [box_name]</p>
+</blockquote>
+<ul>
+<li>启动虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  up</p>
+</blockquote>
+<ul>
+<li>登录虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  ssh</p>
+</blockquote>
+<ul>
+<li>挂起已启动的虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  suspend</p>
+</blockquote>
+<ul>
+<li>重启虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  reload</p>
+</blockquote>
+<ul>
+<li>关闭虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  halt</p>
+</blockquote>
+<ul>
+<li>查看虚拟机状态</li>
+</ul>
+<blockquote>
+<p>vagrant  status</p>
+</blockquote>
+<ul>
+<li>销毁当前虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  destroy</p>
+</blockquote>
+<ul>
+<li>虚拟机打包</li>
+</ul>
+<blockquote>
+<p>vagrant  package  [–output  new_box_name]</p>
+</blockquote>
+<h2 id="Vagrant配置文件"><a href="#Vagrant配置文件" class="headerlink" title="Vagrant配置文件"></a>Vagrant配置文件</h2><h3 id="单台虚拟机的vagrantfile"><a href="#单台虚拟机的vagrantfile" class="headerlink" title="单台虚拟机的vagrantfile"></a>单台虚拟机的vagrantfile</h3><p>在一个空文件夹下执行vagrant init [box-name]即可自动生成以下文件</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- mode: ruby -*-</span></span><br><span class="line"><span class="comment"># vi: set ft=ruby :</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># All Vagrant configuration is done below. The "2" in Vagrant.configure</span></span><br><span class="line"><span class="comment"># configures the configuration version (we support older styles for</span></span><br><span class="line"><span class="comment"># backwards compatibility). Please don't change it unless you know what</span></span><br><span class="line"><span class="comment"># you're doing.</span></span><br><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> <span class="params">|config|</span></span><br><span class="line">  <span class="comment"># box名（vagrant init 命令后面跟的box-name）</span></span><br><span class="line">  config.vm.box = <span class="string">"centos7"</span> </span><br><span class="line">  <span class="comment"># 多台服务器利用主机名进行识别</span></span><br><span class="line">  config.vm.hostname = <span class="string">"my-server"</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 以下是网络配置（选择一个就好了）</span></span><br><span class="line">  <span class="comment"># 公共网络，运行其他机器访问</span></span><br><span class="line">  config.vm.network <span class="string">"public_network"</span></span><br><span class="line">  <span class="comment"># 设置私有网络，仅运行主机访问</span></span><br><span class="line">  config.vm.network <span class="string">"private_network"</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br><span class="line">  <span class="comment"># 端口转发，将host的8080转发到VM的80端口</span></span><br><span class="line">  config.vm.network <span class="string">"forwarded_port"</span>, <span class="symbol">guest:</span> <span class="number">80</span>, <span class="symbol">host:</span> <span class="number">8080</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 同步目录设置，虚拟机开启的时候默认挂载同步/vagrant目录为共享目录。我们还可以通过该配置来设置额外的同步目录。设置共享文件夹后，两个文件夹的文件就可以共享了。（第一个是本地文件夹，第二个是虚拟机文件夹）</span></span><br><span class="line">  config.vm.synced_folder <span class="string">"D:/xxxx"</span>, <span class="string">"/home/vagrant/code"</span></span><br><span class="line">  </span><br><span class="line">  config.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|vb|</span></span><br><span class="line">     <span class="comment"># 启动时打开virtualbox窗口</span></span><br><span class="line">     vb.gui = <span class="literal">true</span></span><br><span class="line">     <span class="comment"># 设置虚拟机内存</span></span><br><span class="line">     vb.memory = <span class="string">"1024"</span></span><br><span class="line">     <span class="comment"># 设置虚拟机CUP</span></span><br><span class="line">     vb.cpus = <span class="number">1</span></span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment"># 启动时执行shell脚本</span></span><br><span class="line">  config.vm.provision <span class="string">"shell"</span>, <span class="symbol">inline:</span> &lt;&lt;-SHELL</span><br><span class="line">     apt-get update</span><br><span class="line">     apt-get install -y apache2</span><br><span class="line">  SHELL</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Vagrantfile创建VM集群"><a href="#Vagrantfile创建VM集群" class="headerlink" title="Vagrantfile创建VM集群"></a>Vagrantfile创建VM集群</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> <span class="params">|config|</span></span><br><span class="line">  <span class="comment"># 定义一个名为web的VM</span></span><br><span class="line">  config.vm.define <span class="symbol">:web</span> <span class="keyword">do</span> <span class="params">|web|</span></span><br><span class="line">    <span class="comment"># VM提供者配置</span></span><br><span class="line">    web.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|v|</span></span><br><span class="line">         <span class="comment"># virtualbox个性化配置，详见 [VBoxManage命令]</span></span><br><span class="line">          v.customize [<span class="string">"modifyvm"</span>, <span class="symbol">:id</span>, <span class="string">"--name"</span>, <span class="string">"web"</span>, <span class="string">"--memory"</span>, <span class="string">"512"</span>]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    web.vm.box = <span class="string">"CentOs7"</span></span><br><span class="line">    web.vm.hostname = <span class="string">"web"</span></span><br><span class="line">    web.vm.network <span class="symbol">:private_network</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line">  config.vm.define <span class="symbol">:redis</span> <span class="keyword">do</span> <span class="params">|redis|</span></span><br><span class="line">    redis.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|v|</span></span><br><span class="line">          v.customize [<span class="string">"modifyvm"</span>, <span class="symbol">:id</span>, <span class="string">"--name"</span>, <span class="string">"redis"</span>, <span class="string">"--memory"</span>, <span class="string">"512"</span>]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    redis.vm.box = <span class="string">"CentOs7"</span></span><br><span class="line">    redis.vm.hostname = <span class="string">"redis"</span></span><br><span class="line">    redis.vm.network <span class="symbol">:private_network</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.11"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>以上内容足够日常开发需要，如需更多高级用法，点击下面链接</p>
+<p>Vagrant高级用法 <a href="https://www.jianshu.com/p/44d9b8a3f1e7" target="_blank" rel="noopener">https://www.jianshu.com/p/44d9b8a3f1e7</a></p>
+
+    </div>
+
+    
+    
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">
+        -------------本文结束 <i class="fa fa-paw"></i> 感谢您的阅读-------------
+        </div>
+    
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/vagrant/" rel="tag"><i class="fa fa-tag"></i> vagrant</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/16/Github/face-go-sdk/" rel="next" title="face-go-sdk">
+                  <i class="fa fa-chevron-left"></i> face-go-sdk
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2019/11/23/Tool/ab%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7/" rel="prev" title="ab压测工具">
+                  ab压测工具 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+    <div class="comments" id="comments"></div>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vagrant介绍"><span class="nav-number">2.</span> <span class="nav-text">Vagrant介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vagrant安装"><span class="nav-number">3.</span> <span class="nav-text">Vagrant安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vagrant基本命令"><span class="nav-number">4.</span> <span class="nav-text">Vagrant基本命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vagrant配置文件"><span class="nav-number">5.</span> <span class="nav-text">Vagrant配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#单台虚拟机的vagrantfile"><span class="nav-number">5.1.</span> <span class="nav-text">单台虚拟机的vagrantfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vagrantfile创建VM集群"><span class="nav-number">5.2.</span> <span class="nav-text">Vagrantfile创建VM集群</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="site-author-image" itemprop="image" alt="江杨"
+    src="/images/logo.jpeg">
+  <p class="site-author-name" itemprop="name">江杨</p>
+  <div class="site-description" itemprop="description">comeonjy</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/comeonjy" title="GitHub &amp;rarr; https:&#x2F;&#x2F;github.com&#x2F;comeonjy" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:programmerjy@gmail.com" title="E-Mail &amp;rarr; mailto:programmerjy@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+  <div class="beian"><a href="http://www.beian.miit.gov.cn/" rel="noopener" target="_blank">蜀ICP备17010064号-1 </a><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null" rel="noopener" target="_blank">null </a>
+  </div>
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">江杨</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    <span title="站点总字数">16k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">15 分钟</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script>
+<script src="/js/schemes/pisces.js"></script>
+<script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+
+
+  
+
+
+
+
+  <script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.includes(item);
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'Rq1BJg5Is07TnPLCQBGwV7XQ-gzGzoHsz',
+    appKey: 'J1NNeAQdodH1H6sOPXd5nn4Q',
+    placeholder: "Just Do It",
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname,
+    recordIP: false,
+    serverURLs: ''
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>

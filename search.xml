@@ -1,0 +1,643 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Linux常用命令</title>
+    <url>/2020/02/26/Linux/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### find ############################</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### grep ############################</span></span></span><br></pre></td></tr></table></figure><h3 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 后台执行</span></span><br><span class="line">nohup COMMAND &amp;</span><br><span class="line">&amp;: 指在后台运行</span><br><span class="line">nohup: （no hang up）不挂断的运行，用户退出终端命令依然运行</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vim</title>
+    <url>/2020/02/26/Linux/vim/</url>
+    <content><![CDATA[<h3 id="vim常用快捷键"><a href="#vim常用快捷键" class="headerlink" title="vim常用快捷键"></a>vim常用快捷键</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">yy # 复制游标所在整行</span><br><span class="line">p  # 粘贴至游标后（下）</span><br><span class="line">P  # 粘贴至游标前（上）</span><br><span class="line">v  # 进入可视界面，可选择文本</span><br><span class="line">:undo/u # 撤销最近一次操作</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vagrant安装k8s</title>
+    <url>/2020/02/25/Kubernetes/vagrant%E5%AE%89%E8%A3%85k8s/</url>
+    <content><![CDATA[<ol>
+<li>创建Vagrantfile</li>
+</ol><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> <span class="params">|config|</span></span><br><span class="line">	config.vm.define <span class="symbol">:master</span> <span class="keyword">do</span> <span class="params">|node|</span></span><br><span class="line">    node.vm.box = <span class="string">"centos7"</span></span><br><span class="line">    node.vm.hostname = <span class="string">"master"</span></span><br><span class="line">    node.vm.network <span class="string">"private_network"</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br><span class="line">    node.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|vb|</span></span><br><span class="line">      vb.memory = <span class="string">"1024"</span></span><br><span class="line">      vb.cpus = <span class="number">2</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  </span><br><span class="line">	(<span class="number">1</span>..<span class="number">2</span>).each <span class="keyword">do</span> <span class="params">|i|</span></span><br><span class="line">			config.vm.define <span class="string">"node<span class="subst">#&#123;i&#125;</span>"</span> <span class="keyword">do</span> <span class="params">|node|</span></span><br><span class="line">          node.vm.box = <span class="string">"centos7"</span></span><br><span class="line">          node.vm.hostname = <span class="string">"node<span class="subst">#&#123;i&#125;</span>"</span></span><br><span class="line">          node.vm.network <span class="string">"private_network"</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.<span class="subst">#&#123;<span class="number">10</span>+i&#125;</span>"</span></span><br><span class="line">          node.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|vb|</span></span><br><span class="line">            vb.memory = <span class="string">"1024"</span></span><br><span class="line">            vb.cpus = <span class="number">2</span></span><br><span class="line">          <span class="keyword">end</span></span><br><span class="line">				<span class="keyword">end</span></span><br><span class="line">		<span class="keyword">end</span></span><br><span class="line">		</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+<ol start="2">
+<li>准备工作</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 更新yum</span></span><br><span class="line">sudo update -y</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装需要的软件包</span></span><br><span class="line">sudo yum install -y vim yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置yum源</span></span><br><span class="line">sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装docker</span></span><br><span class="line">sudo yum install -y docker-ce</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置docker开机自启</span></span><br><span class="line">sudo systemctl start docker &amp;&amp; sudo systemctl enable docker</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改docker镜像源</span></span><br><span class="line">sudo tee /etc/docker/daemon.json &lt;&lt;-'EOF'</span><br><span class="line">&#123;</span><br><span class="line">  "registry-mirrors": ["https://f0fchtxz.mirror.aliyuncs.com"],</span><br><span class="line">  "exec-opts":["native.cgroupdriver=systemd"]</span><br><span class="line">&#125;</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启docker</span></span><br><span class="line">sudo systemctl daemon-reload</span><br><span class="line">sudo systemctl restart docker</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 禁用SELinux （getenforce 查看selinux状态）</span></span><br><span class="line">sudo setenforce 0 # 临时设置</span><br><span class="line">sudo sed -i 's/SELINUX=enforcing/\SELINUX=permissive/' /etc/selinux/config # 永久设置</span><br><span class="line"><span class="meta">#</span><span class="bash"> 禁用虚拟内存（free 查看内存状态）</span></span><br><span class="line">sudo swapoff -a</span><br><span class="line">sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab</span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改内核参数</span></span><br><span class="line">sudo sed -i -e '$a net.bridge.bridge-nf-call-iptables = 1' /etc/sysctl.conf</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置k8s的yum源</span></span><br><span class="line">sudo tee /etc/yum.repos.d/kubernetes.repo &lt;&lt;-'EOF'</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes Repository</span><br><span class="line">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>安装Master节点</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">-----------------------------Master-------------------------------</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装kubeadmin</span></span><br><span class="line">sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span><br><span class="line">sudo systemctl enable kubelet &amp;&amp; sudo systemctl start kubelet</span><br><span class="line"><span class="meta">#</span><span class="bash"> 拉取k8s镜像</span></span><br><span class="line">vim pullk8s.sh</span><br><span class="line">chmod +x pullk8s.sh</span><br><span class="line">sudo ./pullk8s.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 初始化k8s集群（相应参数替换成自己的）</span></span><br><span class="line">kubeadm init  --apiserver-advertise-address=192.168.33.10   --kubernetes-version v1.17.3   --service-cidr=10.1.0.0/16  --pod-network-cidr=10.244.0.0/16</span><br><span class="line"><span class="meta">#</span><span class="bash"> 拷贝配置文件</span></span><br><span class="line">mkdir -p $HOME/.kube</span><br><span class="line">sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装网络插件</span></span><br><span class="line">kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"</span><br></pre></td></tr></table></figure>
+
+<p>k8s镜像拉取脚本（pullk8s.sh）</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">###############Master##############</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 下面的镜像应该去除<span class="string">"k8s.gcr.io/"</span>的前缀，版本换成kubeadm config images list命令获取到的版本</span></span><br><span class="line">images=(</span><br><span class="line">    kube-apiserver:v1.17.3</span><br><span class="line">    kube-controller-manager:v1.17.3</span><br><span class="line">    kube-scheduler:v1.17.3</span><br><span class="line">    kube-proxy:v1.17.3</span><br><span class="line">    pause:3.1</span><br><span class="line">    etcd:3.4.3-0</span><br><span class="line">    coredns:1.6.5</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">for imageName in $&#123;images[@]&#125; ; do</span><br><span class="line">    docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName</span><br><span class="line">    docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName k8s.gcr.io/$imageName</span><br><span class="line">    docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#############Node###############</span></span></span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">images=(</span><br><span class="line">    kube-proxy:v1.17.3</span><br><span class="line">    pause:3.1</span><br><span class="line">    coredns:1.6.5</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">for imageName in $&#123;images[@]&#125; ; do</span><br><span class="line">    docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName</span><br><span class="line">    docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName  k8s.gcr.io/$imageName</span><br><span class="line">    docker rmi registry.cn-hangzhou.aliyuncs.com/google_containers/$imageName</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>安装Node节点</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">-----------------------------Node-------------------------------</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装kubeadmin</span></span><br><span class="line">sudo yum install -y kubelet kubeadm --disableexcludes=kubernetes</span><br><span class="line">sudo systemctl enable kubelet &amp;&amp; sudo systemctl start kubelet</span><br><span class="line"><span class="meta">#</span><span class="bash"> 拉取k8s镜像</span></span><br><span class="line">vim pullk8s.sh</span><br><span class="line">chmod +x pullk8s.sh</span><br><span class="line">sudo ./pullk8s.sh</span><br><span class="line"><span class="meta">#</span><span class="bash"> 加入集群（master上执行kubeadm token create --<span class="built_in">print</span>-join-command可获取）</span></span><br><span class="line">sudo kubeadm join 192.168.33.10:6443 --token w0u69k.63vee52bj7ga9vjy     --discovery-token-ca-cert-hash sha256:b08bcd245131709ef69a257fdabd1545928c25659cbf1ebea4d1c07b0d6fd876</span><br><span class="line"><span class="meta">#</span><span class="bash"> kubectl命令需要使用kubernetes-admin来运行</span></span><br><span class="line">scp /etc/kubernetes/admin.conf dataexa-k8s-node-01:/etc/kubernetes/</span><br><span class="line">sudo sed -i -e '$a export KUBECONFIG=/etc/kubernetes/admin.conf' ~/.bash_profile</span><br><span class="line">source ~/.bash_profile</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li><p>修改节点IP</p>
+<p>Vagrant 在多主机模式时每个主机的 eth0 网口 ip 都是 10.0.2.15，这个网口是所有主机访问公网的出口，用于 nat 转发。而 eth1才是主机真正的 IP。kubelet 在启动时默认读取的是 eth0 网卡的 IP，因此在集群部署完后 kubect get node -o wide 查看到节点的 IP 都是 10.0.2.15。</p>
+<p>k8s 节点 IP 获取不对导致访问节点出现问题，那么解决方法就是调整 kubelet 参数设置正确的<br>IP 地址：<br>编辑 /etc/sysconfig/kubelet 文件，KUBELET_EXTRA_ARGS 环境变量添加 –node-ip 参数：<br>KUBELET_EXTRA_ARGS=”–node-ip=&lt;eth1 网口 IP&gt;”<br>kubelet：systemctl restart kubelet<br>执行 kubectl get node -o wide 发现节点 IP 已经改变</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>Kubernetes</category>
+      </categories>
+      <tags>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>sync.Once</title>
+    <url>/2019/12/01/Golang/sync.Once/</url>
+    <content><![CDATA[<h2 id="sync-Once解析"><a href="#sync-Once解析" class="headerlink" title="sync.Once解析"></a>sync.Once解析</h2><blockquote>
+<p>sync.Once是sync包的一个对象，它只有一个Do方法，sync.Once.Do(f func())只会执行一次</p>
+</blockquote><p>上源码：</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Copyright 2009 The Go Authors. All rights reserved.</span></span><br><span class="line"><span class="comment">// Use of this source code is governed by a BSD-style</span></span><br><span class="line"><span class="comment">// license that can be found in the LICENSE file.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> sync</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"sync/atomic"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Once is an object that will perform exactly one action.</span></span><br><span class="line"><span class="keyword">type</span> Once <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// done indicates whether the action has been performed.</span></span><br><span class="line">	<span class="comment">// It is first in the struct because it is used in the hot path.</span></span><br><span class="line">	<span class="comment">// The hot path is inlined at every call site.</span></span><br><span class="line">	<span class="comment">// Placing done first allows more compact instructions on some architectures (amd64/x86),</span></span><br><span class="line">	<span class="comment">// and fewer instructions (to calculate offset) on other architectures.</span></span><br><span class="line">	done <span class="keyword">uint32</span></span><br><span class="line">	m    Mutex</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Do calls the function f if and only if Do is being called for the</span></span><br><span class="line"><span class="comment">// first time for this instance of Once. In other words, given</span></span><br><span class="line"><span class="comment">// 	var once Once</span></span><br><span class="line"><span class="comment">// if once.Do(f) is called multiple times, only the first call will invoke f,</span></span><br><span class="line"><span class="comment">// even if f has a different value in each invocation. A new instance of</span></span><br><span class="line"><span class="comment">// Once is required for each function to execute.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Do is intended for initialization that must be run exactly once. Since f</span></span><br><span class="line"><span class="comment">// is niladic, it may be necessary to use a function literal to capture the</span></span><br><span class="line"><span class="comment">// arguments to a function to be invoked by Do:</span></span><br><span class="line"><span class="comment">// 	config.once.Do(func() &#123; config.init(filename) &#125;)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Because no call to Do returns until the one call to f returns, if f causes</span></span><br><span class="line"><span class="comment">// Do to be called, it will deadlock.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// If f panics, Do considers it to have returned; future calls of Do return</span></span><br><span class="line"><span class="comment">// without calling f.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">Do</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// Note: Here is an incorrect implementation of Do:</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">//	if atomic.CompareAndSwapUint32(&amp;o.done, 0, 1) &#123;</span></span><br><span class="line">	<span class="comment">//		f()</span></span><br><span class="line">	<span class="comment">//	&#125;</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">// Do guarantees that when it returns, f has finished.</span></span><br><span class="line">	<span class="comment">// This implementation would not implement that guarantee:</span></span><br><span class="line">	<span class="comment">// given two simultaneous calls, the winner of the cas would</span></span><br><span class="line">	<span class="comment">// call f, and the second would return immediately, without</span></span><br><span class="line">	<span class="comment">// waiting for the first's call to f to complete.</span></span><br><span class="line">	<span class="comment">// This is why the slow path falls back to a mutex, and why</span></span><br><span class="line">	<span class="comment">// the atomic.StoreUint32 must be delayed until after f returns.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用原子操作，done为0时表示未执行</span></span><br><span class="line">	<span class="keyword">if</span> atomic.LoadUint32(&amp;o.done) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="comment">// Outlined slow-path to allow inlining of the fast-path.</span></span><br><span class="line">		o.doSlow(f)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">doSlow</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">  <span class="comment">// 给将要执行的方法加互斥锁，避免并发问题</span></span><br><span class="line">	o.m.Lock()</span><br><span class="line">  <span class="comment">// 解锁，程序panic后会依次执行defer函数，这里使用defer保证了即使程序panic也能正常解锁</span></span><br><span class="line">	<span class="keyword">defer</span> o.m.Unlock()</span><br><span class="line">  <span class="comment">// 再次判断计数器的值是否为0，避免f()首次执行完成之前，有多个协程进入doSlow方法等待锁</span></span><br><span class="line">	<span class="keyword">if</span> o.done == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="comment">// 原子操作给done赋值为1，表示已经执行过</span></span><br><span class="line">		<span class="keyword">defer</span> atomic.StoreUint32(&amp;o.done, <span class="number">1</span>)</span><br><span class="line">		f()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<blockquote>
+<p>在原子操作存储某个值的过程中，任何CPU都不会进行针对同一个值的读或写操作，如果我们把所有针对此值的写操作都改为原子操作，那么就不会出现针对此值的读操作因并发问题而读到修改了一半值的情况了</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>Golang</category>
+      </categories>
+      <tags>
+        <tag>GO</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git常用命令</title>
+    <url>/2019/12/01/Git/git%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h2 id="gitignore不生效问题"><a href="#gitignore不生效问题" class="headerlink" title="gitignore不生效问题"></a>gitignore不生效问题</h2><p>在日常开发中可能会遇到在.gitignore文件不生效，或者开发到一半加入了.gitignore，之前被加入git版本控制的文件将不被排除，这些已经加入的文件将持续被git跟踪，这时候我们需要清除对应的索引。</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git rm --cached &lt;file&gt; 从索引中删除文件，但是本地工作区文件还在，只是不希望这个文件被版本控制</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+
+<p>git拷贝当前分支，创建本地新分支dev</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout -b dev</span><br></pre></td></tr></table></figure>
+
+<p>首次push新创建的本地分支dev到远程，远程将创建origin/dev分支</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push --set-upstream origin dev</span><br><span class="line">或</span><br><span class="line">git push -u origin dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p>git拉取远程origin/dev分支到本地命名为dev，并且本地dev与origin/dev建立了关联，可直接push到origin/dev</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout -b dev origin/dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p>删除远程分支dev</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push origin --delete dev</span><br></pre></td></tr></table></figure>
+
+
+
+<p>··········未完待续</p>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git放弃本地文件修改</title>
+    <url>/2019/11/25/Git/git%E6%94%BE%E5%BC%83%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9/</url>
+    <content><![CDATA[<p>你是否遇到过将代码改的乱七八糟想要放弃本地修改的情况呢，或者想要将部分文件恢复到最近一次提交，而剩下的部分继续保留呢？<br>下面我们根据当前工作区的状态分别实现这个想法<br>先理解一下这个图<br><img src="http://assets.processon.com/chart_image/5d9fdd95e4b06b7d6ec6c73e.png" alt="暂存区"></p><ul>
+<li>未使用add的的状态</li>
+</ul><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 指定放弃修改的文件（支持正则表达式，例如：*.go 指所有后缀为.go的文件）</span><br><span class="line">git checkout -- filename</span><br><span class="line"># 放弃所有修改，恢复到最近一次提交</span><br><span class="line">git checkout .</span><br><span class="line"></span><br><span class="line">注意：checkout不会删除新建的文件</span><br><span class="line">若要删除新建的文件，请使用以下命令</span><br><span class="line"></span><br><span class="line"># 显示将要删除的文件（如果有新增的文件夹，则不会显示，包括这个文件夹下的文件）</span><br><span class="line">git clean -n</span><br><span class="line"># 删除新增的文件，但不会删除新增的文件夹（包括这个文件夹下的文件）,path默认当前目录</span><br><span class="line">git clean -f &lt;path&gt;</span><br><span class="line"># 删除新增的文件和文件夹（包括文件夹下的文件）</span><br><span class="line">git clean -df</span><br><span class="line"># 删除新增的文件和文件夹包括被.gitignore过滤的文件和文件夹，慎用</span><br><span class="line">git clean -xdf</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
+<ul>
+<li>已使用git add，未使用git commit的状态</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 清空暂存区，相当于撤回git add的工作，回到未使用add的状态，若不指定文件，默认为所有文件</span><br><span class="line">git reset HEAD [filename]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>已经commit提交了代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 回退版本(HEAD^:回到最近一次提交)</span><br><span class="line">git reset --hard [ commit-id | HEAD^ ]</span><br><span class="line">注意：--hard</span><br></pre></td></tr></table></figure>
+
+
+
+<blockquote>
+<p>扩展 git revert 自己研究下</p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>极度实用的 git stash</title>
+    <url>/2019/11/23/Git/git-stash/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在日常开发的时候，经常会遇到在开发某一分支时需要处理一个紧急bug，而当前的工作又不足以作为一次commit提交，这时候就可以使用stash暂存当前的工作，git会将当前暂存区的修改（已经add但没有commit，<a href="https://www.processon.com/view/link/5d9fdd95e4b0335f1d2bf835" target="_blank" rel="noopener">图解</a>）保存起来，你的工作空间将恢复到上一次提交的状态，这时你就可以放心的切换分支完成其他工作了，完事之后恢复暂存区继续工作。</p><a id="more"></a>
+<h2 id="命令解析"><a href="#命令解析" class="headerlink" title="命令解析"></a>命令解析</h2><ul>
+<li>暂存代码</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add . # 记得添加代码到暂存区</span><br><span class="line">git stash save &apos;暂存的标识&apos; # 暂存操作</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看当前暂存的记录</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git stash list</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>恢复暂存的工作</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git stash pop [stash@&#123;index&#125;] # 恢复指定暂存记录，并删除记录</span><br><span class="line">git stash apply stash@&#123;index&#125; # 恢复指定暂存记录，保留当前记录</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除暂存</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git stash drop stash@&#123;index&#125; # 删除指定暂存</span><br><span class="line">git stash clear # 删除全部暂存</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>误删找回<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">删除暂存后会打印下面这句</span><br><span class="line">Dropped refs/stash@&#123;0&#125; (bc0924769111d8cec80dbceece7c7dd958261a6e)</span><br><span class="line">接下来</span><br><span class="line">git stash apply bc0924769111d8cec80dbceece7c7dd958261a6e</span><br><span class="line">即可恢复被删除的暂存</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ab压测工具</title>
+    <url>/2019/11/23/Tool/ab%E5%8E%8B%E6%B5%8B%E5%B7%A5%E5%85%B7/</url>
+    <content><![CDATA[<h2 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h2><p>ab是Apache超文本传输协议(HTTP)的性能测试工具。其设计意图是描绘当前所安装的Apache的执行性能，主要是显示你安装的Apache每秒可以处理多少个请求。</p><p>Apache for Windows下载地址 <a href="https://www.apachehaus.com/cgi-bin/download.plx" target="_blank" rel="noopener">https://www.apachehaus.com/cgi-bin/download.plx</a></p><a id="more"></a>
+
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>在学习ab命令之前，先了解几个基本概念</p>
+<ol>
+<li><p>吞吐率（Request per secound）<br>服务器并发处理能力的量化描述，单位是reqs/s，指的是某个并发数下单位时间内处理的请求数。某个并发用户数下单位时间能处理的最大请求，称之为最大吞吐率。此数值表示当前机器的整体性能，值越大越好</p>
+</li>
+<li><p>并发连接数（The number of concurrent connections）</p>
+<p>某个时刻服务器所接受的请求数，即会话数</p>
+</li>
+<li><p>并发用户数（The number os concurrent users，Concurrency Level）</p>
+<p>一个用户可能同时产生多个会话，也即连接数</p>
+</li>
+<li><p>用户平均请求等待时间（Time per request）</p>
+<p>计算公式：处理完请求总花费时间/（总请求数 / 并发用户数 ）</p>
+</li>
+<li><p>服务器平均请求等待时间（Time per request：across all concurrent requests）</p>
+<p>计算公式：处理完请求总花费时间/ 总请求数</p>
+</li>
+</ol>
+<h2 id="命令参数解释"><a href="#命令参数解释" class="headerlink" title="命令参数解释"></a>命令参数解释</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-n 用于指定压力测试总共测试次数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-c 用于指定压力测试并发数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-t 等待响应的最大时间，单位秒</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-b TCP发送/接收的缓冲大小，单位字节</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-p 发送post请求时需要上传的文件，此外还必须设置-T参数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-u 发送put请求需要上传的文件，此外还必须设置-T参数</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-T 用于设置Content-type请求头信息，默认text/plain</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-H 添加请求头，例如：“Accept-Encoding:gzip”</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-C 添加cookie信息</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-e 输出结果到CSV文件中 例如：-e result.csv</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-w 以HTML表格形式打印结果</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-h 显示用法详情</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试结果分析"><a href="#测试结果分析" class="headerlink" title="测试结果分析"></a>测试结果分析</h2><blockquote>
+<p>ab -n 1000 -c 100 -w <a href="http://www.baidu.com/" target="_blank" rel="noopener">http://www.baidu.com/</a> &gt;&gt;miss.html</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">Server Software:	BWS/1.1</span><br><span class="line">Server Hostname:	www.baidu.com</span><br><span class="line">Server Port:	80</span><br><span class="line">Document Path:	/</span><br><span class="line">Document Length:	156354 bytes</span><br><span class="line"># 并发级别</span><br><span class="line">Concurrency Level:	100</span><br><span class="line"># 测试花费时间</span><br><span class="line">Time taken for tests:	82.327 seconds</span><br><span class="line"># 完成请求个数</span><br><span class="line">Complete requests:	1000</span><br><span class="line"># 请求失败个数</span><br><span class="line">Failed requests:	0</span><br><span class="line">(Connect: 0, Length: 0, Exceptions: 0)</span><br><span class="line">Total transferred:	156776641 bytes</span><br><span class="line">HTML transferred:	155579478 bytes</span><br><span class="line"># 每秒请求数，吞吐率</span><br><span class="line">Requests per second:    12.13 [#/sec] (mean)</span><br><span class="line"># 用户平均等待时间</span><br><span class="line">Time per request:       8245.510 [ms] (mean)</span><br><span class="line"># 服务器平均请求等待时间</span><br><span class="line">Time per request:       82.455 [ms] (mean, across all concurrent requests)</span><br><span class="line">Transfer rate:          1858.34 [Kbytes/sec] received</span><br><span class="line"></span><br><span class="line">Connection Times (ms)</span><br><span class="line">              min  mean[+/-sd] median   max</span><br><span class="line">Connect:        0 1151 2459.4    191   12937</span><br><span class="line">Processing:   125 1046 3863.1    537   61415</span><br><span class="line">Waiting:       41  204 208.5    186    2002</span><br><span class="line">Total:        165 2197 4420.2    962   61415</span><br><span class="line"></span><br><span class="line">Percentage of the requests served within a certain time (ms)</span><br><span class="line">  50%    962 # 50%的请求花费时间在962ms以下（以此类推，使用-e参数查看详细）</span><br><span class="line">  66%   1731</span><br><span class="line">  75%   2132</span><br><span class="line">  80%   2712</span><br><span class="line">  90%   5126</span><br><span class="line">  95%   7858</span><br><span class="line">  98%  13037</span><br><span class="line">  99%  13245</span><br><span class="line"> 100%  61415 (longest request)</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>压测</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vagrant</title>
+    <url>/2019/11/22/Tool/Vagrant/</url>
+    <content><![CDATA[<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近准备学习K8S了，为了搭建一个Linux集群，于是用到了Vagrant这个工具。</p><p>官方文档：<a href="https://www.vagrantup.com/docs/index.html" target="_blank" rel="noopener">https://www.vagrantup.com/docs/index.html</a></p><h2 id="Vagrant介绍"><a href="#Vagrant介绍" class="headerlink" title="Vagrant介绍"></a>Vagrant介绍</h2><p>Vagrant就是为了方便地实现虚拟化环境而设计的，使用Rube开发，基于VirtualBox，可以很方便的建立起一个虚拟环境，并且具有跨平台，可移动，自动化部署等优点</p><a id="more"></a>
+
+
+<ul>
+<li>建立和删除虚拟机</li>
+<li>配置虚拟机运行参数</li>
+<li>管理虚拟机运行状态</li>
+<li>自动配置和安装开发环境</li>
+<li>打包和分发虚拟机运行环境</li>
+</ul>
+<h2 id="Vagrant安装"><a href="#Vagrant安装" class="headerlink" title="Vagrant安装"></a>Vagrant安装</h2><p>virtualbox官网下载地址 <a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="noopener">https://www.virtualbox.org/wiki/Downloads</a></p>
+<p>vagrant官网下载地址 <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="noopener">https://www.vagrantup.com/downloads.html</a></p>
+<p>下载安装即可</p>
+<h2 id="Vagrant基本命令"><a href="#Vagrant基本命令" class="headerlink" title="Vagrant基本命令"></a>Vagrant基本命令</h2><ul>
+<li><p>添加box镜像到本地环境（box_url可以是本地资源路径或远程下载地址）</p>
+<p>Box下载地址 <a href="http://www.vagrantbox.es/" target="_blank" rel="noopener">http://www.vagrantbox.es/</a></p>
+</li>
+</ul>
+<blockquote>
+<p>vagrant  box  add  [ box_name ]  [ box_url ]</p>
+</blockquote>
+<ul>
+<li>列出本地镜像列表</li>
+</ul>
+<blockquote>
+<p>vagrant  box  list</p>
+</blockquote>
+<ul>
+<li>更新本地box</li>
+</ul>
+<blockquote>
+<p>vagrant  box  update  [ box_name ]</p>
+</blockquote>
+<ul>
+<li>删除box</li>
+</ul>
+<blockquote>
+<p>vagrant  box  remove  [ box_name ]</p>
+</blockquote>
+<ul>
+<li>空文件夹初始化虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant init [box_name]</p>
+</blockquote>
+<ul>
+<li>启动虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  up</p>
+</blockquote>
+<ul>
+<li>登录虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  ssh</p>
+</blockquote>
+<ul>
+<li>挂起已启动的虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  suspend</p>
+</blockquote>
+<ul>
+<li>重启虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  reload</p>
+</blockquote>
+<ul>
+<li>关闭虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  halt</p>
+</blockquote>
+<ul>
+<li>查看虚拟机状态</li>
+</ul>
+<blockquote>
+<p>vagrant  status</p>
+</blockquote>
+<ul>
+<li>销毁当前虚拟机</li>
+</ul>
+<blockquote>
+<p>vagrant  destroy</p>
+</blockquote>
+<ul>
+<li>虚拟机打包</li>
+</ul>
+<blockquote>
+<p>vagrant  package  [–output  new_box_name]</p>
+</blockquote>
+<h2 id="Vagrant配置文件"><a href="#Vagrant配置文件" class="headerlink" title="Vagrant配置文件"></a>Vagrant配置文件</h2><h3 id="单台虚拟机的vagrantfile"><a href="#单台虚拟机的vagrantfile" class="headerlink" title="单台虚拟机的vagrantfile"></a>单台虚拟机的vagrantfile</h3><p>在一个空文件夹下执行vagrant init [box-name]即可自动生成以下文件</p>
+<figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line"><span class="comment"># -*- mode: ruby -*-</span></span><br><span class="line"><span class="comment"># vi: set ft=ruby :</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># All Vagrant configuration is done below. The "2" in Vagrant.configure</span></span><br><span class="line"><span class="comment"># configures the configuration version (we support older styles for</span></span><br><span class="line"><span class="comment"># backwards compatibility). Please don't change it unless you know what</span></span><br><span class="line"><span class="comment"># you're doing.</span></span><br><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> <span class="params">|config|</span></span><br><span class="line">  <span class="comment"># box名（vagrant init 命令后面跟的box-name）</span></span><br><span class="line">  config.vm.box = <span class="string">"centos7"</span> </span><br><span class="line">  <span class="comment"># 多台服务器利用主机名进行识别</span></span><br><span class="line">  config.vm.hostname = <span class="string">"my-server"</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 以下是网络配置（选择一个就好了）</span></span><br><span class="line">  <span class="comment"># 公共网络，运行其他机器访问</span></span><br><span class="line">  config.vm.network <span class="string">"public_network"</span></span><br><span class="line">  <span class="comment"># 设置私有网络，仅运行主机访问</span></span><br><span class="line">  config.vm.network <span class="string">"private_network"</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br><span class="line">  <span class="comment"># 端口转发，将host的8080转发到VM的80端口</span></span><br><span class="line">  config.vm.network <span class="string">"forwarded_port"</span>, <span class="symbol">guest:</span> <span class="number">80</span>, <span class="symbol">host:</span> <span class="number">8080</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 同步目录设置，虚拟机开启的时候默认挂载同步/vagrant目录为共享目录。我们还可以通过该配置来设置额外的同步目录。设置共享文件夹后，两个文件夹的文件就可以共享了。（第一个是本地文件夹，第二个是虚拟机文件夹）</span></span><br><span class="line">  config.vm.synced_folder <span class="string">"D:/xxxx"</span>, <span class="string">"/home/vagrant/code"</span></span><br><span class="line">  </span><br><span class="line">  config.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|vb|</span></span><br><span class="line">     <span class="comment"># 启动时打开virtualbox窗口</span></span><br><span class="line">     vb.gui = <span class="literal">true</span></span><br><span class="line">     <span class="comment"># 设置虚拟机内存</span></span><br><span class="line">     vb.memory = <span class="string">"1024"</span></span><br><span class="line">     <span class="comment"># 设置虚拟机CUP</span></span><br><span class="line">     vb.cpus = <span class="number">1</span></span><br><span class="line">   <span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment"># 启动时执行shell脚本</span></span><br><span class="line">  config.vm.provision <span class="string">"shell"</span>, <span class="symbol">inline:</span> &lt;&lt;-SHELL</span><br><span class="line">     apt-get update</span><br><span class="line">     apt-get install -y apache2</span><br><span class="line">  SHELL</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<h3 id="Vagrantfile创建VM集群"><a href="#Vagrantfile创建VM集群" class="headerlink" title="Vagrantfile创建VM集群"></a>Vagrantfile创建VM集群</h3><figure class="highlight ruby"><table><tr><td class="code"><pre><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> <span class="params">|config|</span></span><br><span class="line">  <span class="comment"># 定义一个名为web的VM</span></span><br><span class="line">  config.vm.define <span class="symbol">:web</span> <span class="keyword">do</span> <span class="params">|web|</span></span><br><span class="line">    <span class="comment"># VM提供者配置</span></span><br><span class="line">    web.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|v|</span></span><br><span class="line">         <span class="comment"># virtualbox个性化配置，详见 [VBoxManage命令]</span></span><br><span class="line">          v.customize [<span class="string">"modifyvm"</span>, <span class="symbol">:id</span>, <span class="string">"--name"</span>, <span class="string">"web"</span>, <span class="string">"--memory"</span>, <span class="string">"512"</span>]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    web.vm.box = <span class="string">"CentOs7"</span></span><br><span class="line">    web.vm.hostname = <span class="string">"web"</span></span><br><span class="line">    web.vm.network <span class="symbol">:private_network</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.10"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"> </span><br><span class="line">  config.vm.define <span class="symbol">:redis</span> <span class="keyword">do</span> <span class="params">|redis|</span></span><br><span class="line">    redis.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> <span class="params">|v|</span></span><br><span class="line">          v.customize [<span class="string">"modifyvm"</span>, <span class="symbol">:id</span>, <span class="string">"--name"</span>, <span class="string">"redis"</span>, <span class="string">"--memory"</span>, <span class="string">"512"</span>]</span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    redis.vm.box = <span class="string">"CentOs7"</span></span><br><span class="line">    redis.vm.hostname = <span class="string">"redis"</span></span><br><span class="line">    redis.vm.network <span class="symbol">:private_network</span>, <span class="symbol">ip:</span> <span class="string">"192.168.33.11"</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>以上内容足够日常开发需要，如需更多高级用法，点击下面链接</p>
+<p>Vagrant高级用法 <a href="https://www.jianshu.com/p/44d9b8a3f1e7" target="_blank" rel="noopener">https://www.jianshu.com/p/44d9b8a3f1e7</a></p>
+]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>vagrant</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>face-go-sdk</title>
+    <url>/2019/11/16/Github/face-go-sdk/</url>
+    <content><![CDATA[<h2 id="百度人脸识别SDK-go"><a href="#百度人脸识别SDK-go" class="headerlink" title="百度人脸识别SDK-go"></a>百度人脸识别SDK-go</h2><p>实现功能：</p><ul>
+<li><input checked disabled type="checkbox"> 人脸库管理</li>
+<li><input checked disabled type="checkbox"> 在线活体检测</li>
+<li><input checked disabled type="checkbox"> 人脸搜索</li>
+<li><input checked disabled type="checkbox"> 人脸对比</li>
+<li><input checked disabled type="checkbox"> 身份认证</li>
+<li><input checked disabled type="checkbox"> 手势识别</li>
+</ul><p>github: <a href="https://github.com/comeonjy/face-go-sdk" target="_blank" rel="noopener">https://github.com/comeonjy/face-go-sdk</a></p>]]></content>
+      <categories>
+        <category>Github</category>
+      </categories>
+      <tags>
+        <tag>轮子</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>正则表达式</title>
+    <url>/2019/10/31/Tool/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/</url>
+    <content><![CDATA[<p>正则表达式描述了一种字符串匹配模式，可以用来检查一个串是否包含某种子串，将匹配的子串替换或者去除符合某条件的子串等。</p><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><p>特殊字符，若要匹配特殊字符，使用 \ 进行转义</p><table>
+<thead>
+<tr>
+<th>特殊字符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$</td>
+<td>匹配输入字符串的结尾位置</td>
+</tr>
+<tr>
+<td>()</td>
+<td>标记一个子表达式的开始和结束位置，子表达式可以获取供以后使用</td>
+</tr>
+<tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次</td>
+</tr>
+<tr>
+<td>.</td>
+<td>匹配除换行符\n之外的任何单字符</td>
+</tr>
+<tr>
+<td>[</td>
+<td>标记一个中括号表达式的开始</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的表达式零次或一次，或指明一个非贪婪限定符</td>
+</tr>
+<tr>
+<td>^</td>
+<td>匹配输入字符串的开始位置，除非在方括号表达式中使用，此时他表示不接受改字符集合</td>
+</tr>
+<tr>
+<td>{</td>
+<td>标记限符表达式的开始</td>
+</tr>
+<tr>
+<td>|</td>
+<td>指明两项之间的一个选择</td>
+</tr>
+</tbody></table><a id="more"></a>
+
+
+<p>限定符用来指定正则表达式的一个给定自建必须要出现多少次才能满足匹配</p>
+<p>贪婪：尽可能多的在匹配字符</p>
+<p>非贪婪：尽可能少的匹配字符</p>
+<table>
+<thead>
+<tr>
+<th>限定符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>*</td>
+<td>匹配前面的子表达式零次或多次，{0,}（贪婪）*号后面加上?可以转换为非贪婪</td>
+</tr>
+<tr>
+<td>+</td>
+<td>匹配前面的子表达式一次或多次，{1,}（贪婪）同上</td>
+</tr>
+<tr>
+<td>?</td>
+<td>匹配前面的子表达式零次或一次，{0,1}</td>
+</tr>
+<tr>
+<td>{n}</td>
+<td>匹配前面的子表达式n次</td>
+</tr>
+<tr>
+<td>{n,}</td>
+<td>匹配前面的子表达式n次及以上</td>
+</tr>
+<tr>
+<td>{n,m}</td>
+<td>匹配前面的子表达式n&lt;=x&lt;=m</td>
+</tr>
+</tbody></table>
+<p>定位符能将正则表达式固定到行首或者行尾、单词的开头或结尾</p>
+<table>
+<thead>
+<tr>
+<th>定位符</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>^</td>
+<td>匹配输入字符的开始位置</td>
+</tr>
+<tr>
+<td>$</td>
+<td>匹配输入字符的结束位置</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>匹配一个单词边界，即自与空格间的位置</td>
+</tr>
+<tr>
+<td>\B</td>
+<td>非单词边界匹配</td>
+</tr>
+</tbody></table>
+<h3 id="未完待续"><a href="#未完待续" class="headerlink" title="未完待续"></a>未完待续</h3><p>……………………………………</p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p>正则表达式在线工具 <a href="http://c.runoob.com/front-end/854" target="_blank" rel="noopener">http://c.runoob.com/front-end/854</a></p>
+]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>正则</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Markdown语法</title>
+    <url>/2019/10/30/Tool/Markdown%E8%AF%AD%E6%B3%95/</url>
+    <content><![CDATA[<p>Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。</p><p>Markdown 语言在 2004 由约翰·格鲁伯（英语：John Gruber）创建。</p><p>Markdown 编写的文档可以导出 HTML 、Word、图像、PDF、Epub 等多种格式的文档。</p><p>Markdown 编写的文档后缀为 .md, .markdown。</p><a id="more"></a>
+
+
+
+<h3 id="工具选择"><a href="#工具选择" class="headerlink" title="工具选择"></a>工具选择</h3><p>Typora 官网：<a href="https://typora.io/" target="_blank" rel="noopener">https://typora.io/</a><br>在线编辑器：<a href="https://c.runoob.com/front-end/712" target="_blank" rel="noopener">https://c.runoob.com/front-end/712</a></p>
+<h3 id="语法部分"><a href="#语法部分" class="headerlink" title="语法部分"></a>语法部分</h3><h4 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h4><p>使用#可以表示1-6级标题</p>
+<h4 id="段落格式"><a href="#段落格式" class="headerlink" title="段落格式"></a>段落格式</h4><p>使用两个空格加回车或者一个空行来表示段落</p>
+<p>斜体文本：*斜体*</p>
+<p><em>斜体</em></p>
+<p>粗体文本：**粗体**</p>
+<p><strong>粗体</strong></p>
+<p>斜粗体文本：***斜粗体***</p>
+<p><strong><em>斜粗体</em></strong></p>
+<p>分割线：三个以上的 *（星号） 或者 -（减号） 或者 __（下划线）</p>
+<hr>
+<hr>
+<hr>
+<p>删除线：~~被删除的文字~~</p>
+<p><del>被删了，啊啊啊啊</del></p>
+<p>脚注：[^文本]     [^文本]:这里是脚注内容</p>
+<p>创建脚注合适类似这样<a href="这里是在后面定义的脚注内容">^文本</a></p>
+<h4 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h4><p>无序列表：使用*，+，- 作为列表标记</p>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<p>有序列表：使用数字加上点（.）</p>
+<ol>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ol>
+<p>列表嵌套：只需在子列表中添加中横线（-）</p>
+<ol>
+<li>第一项<ul>
+<li>第一项的第一个元素</li>
+<li>第一项的第二个元素</li>
+</ul>
+</li>
+<li>第二项</li>
+</ol>
+<h4 id="区块"><a href="#区块" class="headerlink" title="区块"></a>区块</h4><p>使用&gt;符号后面紧跟一个空格</p>
+<blockquote>
+<p>这是区块内容  </p>
+</blockquote>
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><p>```go</p>
+<p>这里是代码</p>
+<p>```</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> golang <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h4><p>[这是链接内容](<a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a>)</p>
+<p><a href="https://www.baidu.com" target="_blank" rel="noopener">这是链接内容</a></p>
+<p>高级链接</p>
+<p>这个链接用google作为网址变量[Google][google]</p>
+<p>[google]:<a href="http://www.google.com" target="_blank" rel="noopener">http://www.google.com</a></p>
+<p>这个链接用google作为网址变量<a href="http://www.google.com" target="_blank" rel="noopener">Google</a></p>
+<h4 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h4><p>![RUNOOB 图标](<a href="http://static.runoob.com/images/runoob-logo.png" target="_blank" rel="noopener">http://static.runoob.com/images/runoob-logo.png</a> “RUNOOB”)</p>
+<p><img src="http://static.runoob.com/images/runoob-logo.png" alt="RUNOOB 图标" title="RUNOOB"></p>
+<p><img src="http://static.runoob.com/images/runoob-logo.png" alt="myImg" title="title"></p>
+<h4 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h4><p>使用|分割列没使用-分割行</p>
+<p>左对齐：:-</p>
+<p>右对齐：-:</p>
+<p>居中对齐：:-:</p>
+<p>|表头1|表头2|表头3|</p>
+<p>|:-:|:-|-:|</p>
+<p>|1|2|3|</p>
+<table>
+<thead>
+<tr>
+<th align="center">表头1</th>
+<th align="left">表头2</th>
+<th align="right">表头2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="left">2</td>
+<td align="right">3</td>
+</tr>
+</tbody></table>
+<h4 id="高级技巧"><a href="#高级技巧" class="headerlink" title="高级技巧"></a>高级技巧</h4><p>markdown支持反斜杠转义</p>
+<p>markdown支持众多html元素</p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>菜鸟教程 <a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/markdown/md-tutorial.html</a></p>
+]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>皮囊</title>
+    <url>/2019/10/30/Book/%E7%9A%AE%E5%9B%8A/</url>
+    <content><![CDATA[<h2 id="皮囊"><a href="#皮囊" class="headerlink" title="皮囊"></a>皮囊</h2><p>这些刻在骨头里的故事，那些我们始终要回答的问题</p><p>每个读者只能读到已然存在于他内心的东西，书籍只不过是一种光学仪器，帮助读者发现自己的内心</p><p align="right">------马塞尔·普鲁斯特</p>]]></content>
+      <categories>
+        <category>书籍</category>
+      </categories>
+      <tags>
+        <tag>皮囊</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2019/10/30/hello-world/</url>
+    <content><![CDATA[<p>欢迎来到我的博客</p><h2 id="说些什么呢？"><a href="#说些什么呢？" class="headerlink" title="说些什么呢？"></a>说些什么呢？</h2><p>……………………………</p>]]></content>
+      <categories>
+        <category>还没想好</category>
+      </categories>
+      <tags>
+        <tag>hello</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>肖申克的救赎</title>
+    <url>/2019/10/30/Film/%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E/</url>
+    <content><![CDATA[<h2 id="肖申克的救赎"><a href="#肖申克的救赎" class="headerlink" title="肖申克的救赎"></a>肖申克的救赎</h2>]]></content>
+      <categories>
+        <category>电影</category>
+      </categories>
+      <tags>
+        <tag>电影</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RPC AND Protobuf</title>
+    <url>/2019/10/30/Golang/RPC%20AND%20Protobuf/</url>
+    <content><![CDATA[<h2 id="RPC入门"><a href="#RPC入门" class="headerlink" title="RPC入门"></a>RPC入门</h2><h3 id="RPC版”Hello-World”"><a href="#RPC版”Hello-World”" class="headerlink" title="RPC版”Hello, World”"></a>RPC版”Hello, World”</h3><p>Go语言的RPC包的路径为net/rpc，也就是放在了net包目录下面。因此我们可以猜测该RPC包是建立在net包基础之上的。在第一章“Hello, World”革命一节最后，我们基于http实现了一个打印例子。下面我们尝试基于rpc实现一个类似的例子。<br>我们先构造一个HelloService类型，其中的Hello方法用于实现打印功能：</p><a id="more"></a>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> HelloService <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(p *HelloService)</span> <span class="title">Hello</span><span class="params">(request <span class="keyword">string</span>, reply *<span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    *reply = <span class="string">"hello:"</span> + request</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中Hello方法必须满足Go语言的RPC规则：方法只能有两个可序列化的参数，其中第二个参数是指针类型，并且返回一个error类型，同时必须是公开的方法。<br>然后就可以将HelloService类型的对象注册为一个RPC服务：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    rpc.RegisterName(<span class="string">"HelloService"</span>, <span class="built_in">new</span>(HelloService))</span><br><span class="line"></span><br><span class="line">    listener, err := net.Listen(<span class="string">"tcp"</span>, <span class="string">":1234"</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"ListenTCP error:"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    conn, err := listener.Accept()</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"Accept error:"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    rpc.ServeConn(conn)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中rpc.Register函数调用会将对象类型中所有满足RPC规则的对象方法注册为RPC函数，所有注册的方法会放在“HelloService”服务空间之下。然后我们建立一个唯一的TCP链接，并且通过rpc.ServeConn函数在该TCP链接上为对方提供RPC服务。<br>下面是客户端请求HelloService服务的代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    client, err := rpc.Dial(<span class="string">"tcp"</span>, <span class="string">"localhost:1234"</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(<span class="string">"dialing:"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> reply <span class="keyword">string</span></span><br><span class="line">    err = client.Call(<span class="string">"HelloService.Hello"</span>, <span class="string">"hello"</span>, &amp;reply)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    fmt.Println(reply)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先是通过rpc.Dial拨号RPC服务，然后通过client.Call调用具体的RPC方法。在调用client.Call时，第一个参数是用点号链接的RPC服务名字和方法名字，第二和第三个参数分别我们定义RPC方法的两个参数。<br>由这个例子可以看出RPC的使用其实非常简单。</p>
+]]></content>
+      <categories>
+        <category>Golang</category>
+      </categories>
+      <tags>
+        <tag>GO</tag>
+      </tags>
+  </entry>
+</search>
