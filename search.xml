@@ -60,7 +60,7 @@
         <category>Kubernetes</category>
       </categories>
       <tags>
-        <tag>k8s</tag>
+        <tag>K8S</tag>
       </tags>
   </entry>
   <entry>
@@ -91,25 +91,12 @@
 
 
 
-<p>git拷贝当前分支，创建本地新分支dev</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout -b dev</span><br></pre></td></tr></table></figure>
-
-<p>首次push新创建的本地分支dev到远程，远程将创建origin/dev分支</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push --set-upstream origin dev</span><br><span class="line">或</span><br><span class="line">git push -u origin dev</span><br></pre></td></tr></table></figure>
+<h2 id="删除分支dev"><a href="#删除分支dev" class="headerlink" title="删除分支dev"></a>删除分支dev</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git branch -D dev // 删除本地分支</span><br><span class="line">git push origin --delete dev // 删除远程分支</span><br><span class="line">git remote prune origin // 同步远程已删除分支</span><br></pre></td></tr></table></figure>
 
 
 
-<p>git拉取远程origin/dev分支到本地命名为dev，并且本地dev与origin/dev建立了关联，可直接push到origin/dev</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git checkout -b dev origin/dev</span><br></pre></td></tr></table></figure>
+<h2 id="git更换push提交地址"><a href="#git更换push提交地址" class="headerlink" title="git更换push提交地址"></a>git更换push提交地址</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote rm origin // 删除远程地址</span><br><span class="line">git remote add origin http://github.com/xxx/xxx.git // 更换远程地址</span><br><span class="line">git push --set-upstream origin benchname  // 把当前分支与远程分支进行关联</span><br><span class="line">或者</span><br><span class="line">git push -u origin benchname</span><br></pre></td></tr></table></figure>
 
-
-
-<p>删除远程分支dev</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git push origin --delete dev</span><br></pre></td></tr></table></figure>
-
-
-
-<p>··········未完待续</p>
 ]]></content>
       <categories>
         <category>Git</category>
@@ -143,12 +130,15 @@
 <p>扩展 git revert 自己研究下</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
       <tags>
         <tag>Git</tag>
       </tags>
   </entry>
   <entry>
-    <title>极度实用的 git stash</title>
+    <title>实用的 git stash</title>
     <url>/2019/11/23/Git/git-stash/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在日常开发的时候，经常会遇到在开发某一分支时需要处理一个紧急bug，而当前的工作又不足以作为一次commit提交，这时候就可以使用stash暂存当前的工作，git会将当前暂存区的修改（已经add但没有commit，<a href="https://www.processon.com/view/link/5d9fdd95e4b0335f1d2bf835" target="_blank" rel="noopener">图解</a>）保存起来，你的工作空间将恢复到上一次提交的状态，这时你就可以放心的切换分支完成其他工作了，完事之后恢复暂存区继续工作。</p><a id="more"></a>
 <h2 id="命令解析"><a href="#命令解析" class="headerlink" title="命令解析"></a>命令解析</h2><ul>
