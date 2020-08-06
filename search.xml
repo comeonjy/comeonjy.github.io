@@ -1,6 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Docker 命令详解</title>
+    <url>/2020/08/06/Tool/Docker%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h2 id="容器生命周期管理"><a href="#容器生命周期管理" class="headerlink" title="容器生命周期管理"></a>容器生命周期管理</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 创建（create）并运行一个新容器</span><br><span class="line">docker run [options] image [command] [arg...]</span><br></pre></td></tr></table></figure><ul>
+<li>-d 后台运行容器并返回容器ID</li>
+<li>-i 以交互模式运行容器</li>
+<li>-t 为容器重新分配一个伪终端</li>
+<li>-P 端口随机映射</li>
+<li>-p 指定端口映射 <code>宿主机端口:容器端口</code></li>
+<li>–name | -n 为容器指定一个名称</li>
+<li>-e <code>server=&quot;dev&quot;</code> 设置环境变量</li>
+<li>–env-file=[] 指定文件读入环境变量</li>
+<li>-dns <code>8.8.8.8</code> 指定容器使用的DNS，默认和宿主一致</li>
+<li>-h 指定容器的hostname</li>
+<li>-m 设置容器使用容器最大值</li>
+<li>–net=“bridge” 指定容器的网络连接类型</li>
+<li>–link=[] 添加链接到另一个容器</li>
+<li>–volume，-v 绑定一个卷</li>
+</ul><a id="more"></a>
+
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 开启、暂停、重启容器</span><br><span class="line">docker start|stop|restart [options] containers...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 杀掉一个运行中的容器</span><br><span class="line">docker kill [options] containers...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-s 向容器发送一个信号</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 删除一个或多个容器</span><br><span class="line">docker rm [options] containers...</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-f 通过SIGKILL信号强制删除一个运行中的容器</li>
+<li>-l 移除容器间的网络连接</li>
+<li>-v 删除容器关联的卷</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 在运行的容器中执行命令</span><br><span class="line">docker exec [options] container command [arg...]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-d 后台运行</li>
+<li>-i 交互模式运行</li>
+<li>-t 分配一个伪终端</li>
+</ul>
+<h2 id="容器操作"><a href="#容器操作" class="headerlink" title="容器操作"></a>容器操作</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 列出容器</span><br><span class="line">docker ps [options]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-a 显示所有容器</li>
+<li>-f 根据条件过滤显示的内容</li>
+<li>–format 指定返回值的模板文件</li>
+<li>-l 显示最近创建的容器</li>
+<li>-n 列出最近创建的n个容器</li>
+<li>–no-trunc 不截断输出</li>
+<li>-q 静默模式，只显示容器编号</li>
+<li>-s 显示总的文件大小</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 获取容器/镜像的元数据</span><br><span class="line">docker inspect [options] name|id</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-f 指定返回值的模板文件</li>
+<li>-s 显示总的文件大小</li>
+<li>–type 为指定类型返回json</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 查看容器中运行的进程信息</span><br><span class="line">docker top</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 获取容器日志</span><br><span class="line">docker logs [options] container</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-f 跟踪日志输出</li>
+<li>-t 显示时间戳</li>
+<li>–tail 仅列出最新N条日志</li>
+<li>–since 显示某个开始时间的日志</li>
+</ul>
+<h2 id="容器rootfs命令"><a href="#容器rootfs命令" class="headerlink" title="容器rootfs命令"></a>容器rootfs命令</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 从容器创建一个新的镜像</span><br><span class="line">docker commit [options] container [repository[:tag]]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-a 提交镜像的作者</li>
+<li>-c 使用dockerfile指令来创建镜像</li>
+<li>-m 提交时的说明文字</li>
+<li>-p 在commit时将容器暂停</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 容器与主机之间的数据拷贝</span><br><span class="line">docker cp [options] container:src_path dest_path</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-L 保持源目标中的链接</li>
+</ul>
+<h2 id="本地镜像管理"><a href="#本地镜像管理" class="headerlink" title="本地镜像管理"></a>本地镜像管理</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 列处本地镜像</span><br><span class="line">docker images [options] [repository[:tag]]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-a 列出本地所有镜像</li>
+<li>–digests 显示摘要信息</li>
+<li>-f 显示满足条件的镜像</li>
+<li>–format 指定返回值的模板文件</li>
+<li>–no-trunc 显示完整镜像信息</li>
+<li>-q 只显示镜像ID</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 删除镜像</span><br><span class="line">docker rmi [options] image</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-f 强制删除</li>
+<li>–no-prune 不移除过程镜像</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>Tool</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>brew 命令详解</title>
+    <url>/2020/08/05/Tool/brew/</url>
+    <content><![CDATA[<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 搜索软件</span></span><br><span class="line">brew search [TEXT|/REGEX/]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查询已安装软件列表</span></span><br><span class="line">brew list</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载/卸载软件</span></span><br><span class="line">brew install/uninstall</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew</span></span><br><span class="line">brew update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew下载的软件</span></span><br><span class="line">brew upgrade &lt;software_name&gt;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>Tool</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Linux常用命令</title>
     <url>/2020/02/26/Linux/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
     <content><![CDATA[<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### find ############################</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### grep ############################</span></span></span><br></pre></td></tr></table></figure><h3 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 后台执行</span></span><br><span class="line">nohup COMMAND &amp;</span><br><span class="line">&amp;: 指在后台运行</span><br><span class="line">nohup: （no hang up）不挂断的运行，用户退出终端命令依然运行</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br></pre></td></tr></table></figure>]]></content>
@@ -68,7 +187,7 @@
     <url>/2019/12/01/Golang/sync.Once/</url>
     <content><![CDATA[<h2 id="sync-Once解析"><a href="#sync-Once解析" class="headerlink" title="sync.Once解析"></a>sync.Once解析</h2><blockquote>
 <p>sync.Once是sync包的一个对象，它只有一个Do方法，sync.Once.Do(f func())只会执行一次</p>
-</blockquote><p>上源码：</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Copyright 2009 The Go Authors. All rights reserved.</span></span><br><span class="line"><span class="comment">// Use of this source code is governed by a BSD-style</span></span><br><span class="line"><span class="comment">// license that can be found in the LICENSE file.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> sync</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"sync/atomic"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Once is an object that will perform exactly one action.</span></span><br><span class="line"><span class="keyword">type</span> Once <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// done indicates whether the action has been performed.</span></span><br><span class="line">	<span class="comment">// It is first in the struct because it is used in the hot path.</span></span><br><span class="line">	<span class="comment">// The hot path is inlined at every call site.</span></span><br><span class="line">	<span class="comment">// Placing done first allows more compact instructions on some architectures (amd64/x86),</span></span><br><span class="line">	<span class="comment">// and fewer instructions (to calculate offset) on other architectures.</span></span><br><span class="line">	done <span class="keyword">uint32</span></span><br><span class="line">	m    Mutex</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Do calls the function f if and only if Do is being called for the</span></span><br><span class="line"><span class="comment">// first time for this instance of Once. In other words, given</span></span><br><span class="line"><span class="comment">// 	var once Once</span></span><br><span class="line"><span class="comment">// if once.Do(f) is called multiple times, only the first call will invoke f,</span></span><br><span class="line"><span class="comment">// even if f has a different value in each invocation. A new instance of</span></span><br><span class="line"><span class="comment">// Once is required for each function to execute.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Do is intended for initialization that must be run exactly once. Since f</span></span><br><span class="line"><span class="comment">// is niladic, it may be necessary to use a function literal to capture the</span></span><br><span class="line"><span class="comment">// arguments to a function to be invoked by Do:</span></span><br><span class="line"><span class="comment">// 	config.once.Do(func() &#123; config.init(filename) &#125;)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Because no call to Do returns until the one call to f returns, if f causes</span></span><br><span class="line"><span class="comment">// Do to be called, it will deadlock.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// If f panics, Do considers it to have returned; future calls of Do return</span></span><br><span class="line"><span class="comment">// without calling f.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">Do</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// Note: Here is an incorrect implementation of Do:</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">//	if atomic.CompareAndSwapUint32(&amp;o.done, 0, 1) &#123;</span></span><br><span class="line">	<span class="comment">//		f()</span></span><br><span class="line">	<span class="comment">//	&#125;</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">// Do guarantees that when it returns, f has finished.</span></span><br><span class="line">	<span class="comment">// This implementation would not implement that guarantee:</span></span><br><span class="line">	<span class="comment">// given two simultaneous calls, the winner of the cas would</span></span><br><span class="line">	<span class="comment">// call f, and the second would return immediately, without</span></span><br><span class="line">	<span class="comment">// waiting for the first's call to f to complete.</span></span><br><span class="line">	<span class="comment">// This is why the slow path falls back to a mutex, and why</span></span><br><span class="line">	<span class="comment">// the atomic.StoreUint32 must be delayed until after f returns.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用原子操作，done为0时表示未执行</span></span><br><span class="line">	<span class="keyword">if</span> atomic.LoadUint32(&amp;o.done) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="comment">// Outlined slow-path to allow inlining of the fast-path.</span></span><br><span class="line">		o.doSlow(f)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">doSlow</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">  <span class="comment">// 给将要执行的方法加互斥锁，避免并发问题</span></span><br><span class="line">	o.m.Lock()</span><br><span class="line">  <span class="comment">// 解锁，程序panic后会依次执行defer函数，这里使用defer保证了即使程序panic也能正常解锁</span></span><br><span class="line">	<span class="keyword">defer</span> o.m.Unlock()</span><br><span class="line">  <span class="comment">// 再次判断计数器的值是否为0，避免f()首次执行完成之前，有多个协程进入doSlow方法等待锁</span></span><br><span class="line">	<span class="keyword">if</span> o.done == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="comment">// 原子操作给done赋值为1，表示已经执行过</span></span><br><span class="line">		<span class="keyword">defer</span> atomic.StoreUint32(&amp;o.done, <span class="number">1</span>)</span><br><span class="line">		f()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+</blockquote><p>上源码：</p><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Copyright 2009 The Go Authors. All rights reserved.</span></span><br><span class="line"><span class="comment">// Use of this source code is governed by a BSD-style</span></span><br><span class="line"><span class="comment">// license that can be found in the LICENSE file.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> sync</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"sync/atomic"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Once is an object that will perform exactly one action.</span></span><br><span class="line"><span class="keyword">type</span> Once <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// done indicates whether the action has been performed.</span></span><br><span class="line">	<span class="comment">// It is first in the struct because it is used in the hot path.</span></span><br><span class="line">	<span class="comment">// The hot path is inlined at every call site.</span></span><br><span class="line">	<span class="comment">// Placing done first allows more compact instructions on some architectures (amd64/x86),</span></span><br><span class="line">	<span class="comment">// and fewer instructions (to calculate offset) on other architectures.</span></span><br><span class="line">	done <span class="keyword">uint32</span></span><br><span class="line">	m    Mutex</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Do calls the function f if and only if Do is being called for the</span></span><br><span class="line"><span class="comment">// first time for this instance of Once. In other words, given</span></span><br><span class="line"><span class="comment">// 	var once Once</span></span><br><span class="line"><span class="comment">// if once.Do(f) is called multiple times, only the first call will invoke f,</span></span><br><span class="line"><span class="comment">// even if f has a different value in each invocation. A new instance of</span></span><br><span class="line"><span class="comment">// Once is required for each function to execute.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Do is intended for initialization that must be run exactly once. Since f</span></span><br><span class="line"><span class="comment">// is niladic, it may be necessary to use a function literal to capture the</span></span><br><span class="line"><span class="comment">// arguments to a function to be invoked by Do:</span></span><br><span class="line"><span class="comment">// 	config.once.Do(func() &#123; config.init(filename) &#125;)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Because no call to Do returns until the one call to f returns, if f causes</span></span><br><span class="line"><span class="comment">// Do to be called, it will deadlock.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// If f panics, Do considers it to have returned; future calls of Do return</span></span><br><span class="line"><span class="comment">// without calling f.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">Do</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// Note: Here is an incorrect implementation of Do:</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">//	if atomic.CompareAndSwapUint32(&amp;o.done, 0, 1) &#123;</span></span><br><span class="line">	<span class="comment">//		f()</span></span><br><span class="line">	<span class="comment">//	&#125;</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">// Do guarantees that when it returns, f has finished.  </span></span><br><span class="line">	<span class="comment">// This implementation would not implement that guarantee:</span></span><br><span class="line">	<span class="comment">// given two simultaneous calls, the winner of the cas would</span></span><br><span class="line">	<span class="comment">// call f, and the second would return immediately, without</span></span><br><span class="line">	<span class="comment">// waiting for the first's call to f to complete.</span></span><br><span class="line">	<span class="comment">// This is why the slow path falls back to a mutex, and why</span></span><br><span class="line">	<span class="comment">// the atomic.StoreUint32 must be delayed until after f returns.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用原子操作，done为0时表示未执行</span></span><br><span class="line">	<span class="keyword">if</span> atomic.LoadUint32(&amp;o.done) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="comment">// Outlined slow-path to allow inlining of the fast-path.</span></span><br><span class="line">		o.doSlow(f)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">doSlow</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">  <span class="comment">// 给将要执行的方法加互斥锁，避免并发问题</span></span><br><span class="line">	o.m.Lock()</span><br><span class="line">  <span class="comment">// 解锁，程序panic后会依次执行defer函数，这里使用defer保证了即使程序panic也能正常解锁</span></span><br><span class="line">	<span class="keyword">defer</span> o.m.Unlock()</span><br><span class="line">  <span class="comment">// 再次判断计数器的值是否为0，避免f()首次执行完成之前，有多个协程进入doSlow方法等待锁</span></span><br><span class="line">	<span class="keyword">if</span> o.done == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="comment">// 原子操作给done赋值为1，表示已经执行过</span></span><br><span class="line">		<span class="keyword">defer</span> atomic.StoreUint32(&amp;o.done, <span class="number">1</span>)</span><br><span class="line">		f()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
 
@@ -582,7 +701,7 @@
   <entry>
     <title>皮囊</title>
     <url>/2019/10/30/Book/%E7%9A%AE%E5%9B%8A/</url>
-    <content><![CDATA[<h2 id="皮囊"><a href="#皮囊" class="headerlink" title="皮囊"></a>皮囊</h2><p>这些刻在骨头里的故事，那些我们始终要回答的问题</p><p>每个读者只能读到已然存在于他内心的东西，书籍只不过是一种光学仪器，帮助读者发现自己的内心</p><p align="right">------马塞尔·普鲁斯特</p>]]></content>
+    <content><![CDATA[<h2 id="皮囊"><a href="#皮囊" class="headerlink" title="皮囊"></a>皮囊</h2><p>这些刻在骨头里的故事，那些我们始终要回答的问题</p><p>每个读者只能读到已然存在于他内心的东西，书籍只不过是一种光学仪器，帮助读者发现自己的内心</p><p align="right">------马塞尔·普鲁斯特</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1ggv3w0hkcjj305n050jsi.jpg" alt></p>]]></content>
       <categories>
         <category>书籍</category>
       </categories>
