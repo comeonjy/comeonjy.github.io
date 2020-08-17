@@ -95,6 +95,7 @@
 <li>如果Dockerfile中存在多个ENTRYPOINT指令，仅最后一个生效</li>
 </ul>
 <p>如果同时存在CMD和ENTRYPOINT，则CMD作为ENTRYPOINT的参数</p>
+<p>如果k8s存在command，则忽略dockerfile启动参数，否则args（若存在）覆盖掉dockerfile的CMD</p>
 <h3 id="ENV"><a href="#ENV" class="headerlink" title="ENV"></a>ENV</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 设置环境变量,设置后可在后续指令中引用</span><br><span class="line">ENV &lt;key&gt; &lt;value&gt;</span><br><span class="line">ENV &lt;key&gt;=&lt;value&gt; [&lt;key&gt;=&lt;value&gt; ...]</span><br></pre></td></tr></table></figure>
 
 <h3 id="ARG"><a href="#ARG" class="headerlink" title="ARG"></a>ARG</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ARG 构建参数，ARG设置的环境变量仅对Dockerfile有效</span><br><span class="line">ARG &lt;参数名&gt;[=&lt;默认值&gt;]</span><br></pre></td></tr></table></figure>
