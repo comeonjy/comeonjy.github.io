@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Golang中defer、return和函数返回值</title>
+    <url>/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/</url>
+    <content><![CDATA[<h2 id="Golang中defer、return和返回值"><a href="#Golang中defer、return和返回值" class="headerlink" title="Golang中defer、return和返回值"></a>Golang中defer、return和返回值</h2><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">"a return:"</span>, a())  <span class="comment">// 打印结果为 a return: 0</span></span><br><span class="line">	fmt.Println(<span class="string">"b return:"</span>, b()) <span class="comment">// 打印结果为 b return: 3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">a</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer2:"</span>, i) <span class="comment">// 打印结果为 a defer2: 2</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer1:"</span>, i) <span class="comment">// 打印结果为 a defer1: 1</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">b</span><span class="params">()</span> <span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> j = <span class="number">2</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer2: j="</span>, j) <span class="comment">// 打印结果为 b defer2: j= 4</span></span><br><span class="line">		fmt.Println(<span class="string">"b defer2: i="</span>, i) <span class="comment">// 打印结果为 b defer2: i= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer1: j="</span>, j) <span class="comment">// 打印结果为 b defer1: j= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> j </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+<h3 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h3><ol>
+<li>return</li>
+<li>defer</li>
+<li>函数返回</li>
+</ol>
+<h3 id="return"><a href="#return" class="headerlink" title="return"></a>return</h3><ul>
+<li>将return后面的表达式的值赋给返回值，若为匿名返回值，则赋值给一个临时变量，执行完defer后再将其返回</li>
+</ul>
+<h3 id="defer"><a href="#defer" class="headerlink" title="defer"></a>defer</h3><ul>
+<li>作用域：只对当前协程有效</li>
+<li>程序panic后依然会执行defer，主动调用os.Exit(int)不会执行defer</li>
+<li>defer声明时会先计算参数的值</li>
+<li>多个defer执行顺序为先进后出</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>GO</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MongoDB</title>
     <url>/2020/08/07/Tool/MongoDB/</url>
     <content><![CDATA[<h2 id="MongoDB基础使用"><a href="#MongoDB基础使用" class="headerlink" title="MongoDB基础使用"></a>MongoDB基础使用</h2><blockquote>
@@ -245,23 +269,12 @@
   <entry>
     <title>brew 命令详解</title>
     <url>/2020/08/05/Tool/brew/</url>
-    <content><![CDATA[<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 搜索软件</span></span><br><span class="line">brew search [TEXT|/REGEX/]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查询已安装软件列表</span></span><br><span class="line">brew list</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载/卸载软件</span></span><br><span class="line">brew install/uninstall</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew</span></span><br><span class="line">brew update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew下载的软件</span></span><br><span class="line">brew upgrade &lt;software_name&gt;</span><br></pre></td></tr></table></figure>]]></content>
+    <content><![CDATA[<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 搜索软件</span></span><br><span class="line">brew search [TEXT|/REGEX/]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查询已安装软件列表</span></span><br><span class="line">brew list</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载/卸载软件</span></span><br><span class="line">brew install/uninstall</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew</span></span><br><span class="line">brew update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew下载的软件</span></span><br><span class="line">brew upgrade &lt;software_name&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示brew软件包根目录</span></span><br><span class="line">brew --repo</span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>Tool</category>
       </categories>
       <tags>
         <tag>Tool</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux常用命令</title>
-    <url>/2020/02/26/Linux/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
-    <content><![CDATA[<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### find ############################</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### grep ############################</span></span></span><br></pre></td></tr></table></figure><h3 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 后台执行</span></span><br><span class="line">nohup COMMAND &amp;</span><br><span class="line">&amp;: 指在后台运行</span><br><span class="line">nohup: （no hang up）不挂断的运行，用户退出终端命令依然运行</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -274,6 +287,17 @@
       <tags>
         <tag>Linux</tag>
         <tag>Vim</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux常用命令</title>
+    <url>/2020/02/26/Linux/Linux%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</url>
+    <content><![CDATA[<h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### find ############################</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">########################### grep ############################</span></span></span><br></pre></td></tr></table></figure><h3 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h3><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 后台执行</span></span><br><span class="line">nohup COMMAND &amp;</span><br><span class="line">&amp;: 指在后台运行</span><br><span class="line">nohup: （no hang up）不挂断的运行，用户退出终端命令依然运行</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -852,17 +876,6 @@
       </categories>
       <tags>
         <tag>hello</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>肖申克的救赎</title>
-    <url>/2019/10/30/Film/%E8%82%96%E7%94%B3%E5%85%8B%E7%9A%84%E6%95%91%E8%B5%8E/</url>
-    <content><![CDATA[<h2 id="肖申克的救赎"><a href="#肖申克的救赎" class="headerlink" title="肖申克的救赎"></a>肖申克的救赎</h2>]]></content>
-      <categories>
-        <category>电影</category>
-      </categories>
-      <tags>
-        <tag>电影</tag>
       </tags>
   </entry>
   <entry>
