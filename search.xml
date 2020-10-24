@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>go-web</title>
+    <url>/2020/10/24/Github/go-web/</url>
+    <content><![CDATA[<h1 id="GO-WEB-业务框架"><a href="#GO-WEB-业务框架" class="headerlink" title="GO-WEB 业务框架"></a>GO-WEB 业务框架</h1><p>github: <a href="https://github.com/comeonjy/go-web" target="_blank" rel="noopener">https://github.com/comeonjy/go-web</a></p><h2 id="Git-Flow-分支管理"><a href="#Git-Flow-分支管理" class="headerlink" title="Git Flow 分支管理"></a>Git Flow 分支管理</h2><ul>
+<li>master：主分支（用于版本发布，始终与线上一致）</li>
+<li>dev：开发分支（用于开发，提测时，从dev检出release-1.0.0分支）</li>
+<li>release: 预发布（用于测试，测试中有问题直接修改，测试完成后合并入master和dev）</li>
+<li>feature-*：功能分支（用于功能开发，完成后合并到dev）</li>
+<li>hotfix-*：修复bug（从master分出来，完成后合并到master和dev）<br><img src="http://assets.processon.com/chart_image/5f93a2e15653bb06ef13def8.png" alt></li>
+</ul><a id="more"></a>
+
+<h2 id="项目规范"><a href="#项目规范" class="headerlink" title="项目规范"></a>项目规范</h2><h3 id="API规范"><a href="#API规范" class="headerlink" title="API规范"></a>API规范</h3><p><a href="http://kaelzhang81.github.io/2019/05/24/Restful-API%E8%AE%BE%E8%AE%A1%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" target="_blank" rel="noopener">Restful</a></p>
+<ul>
+<li><p>URL</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">一类资源两个URL</span><br><span class="line"></span><br><span class="line"># 资源集合：</span><br><span class="line">/epics</span><br><span class="line"># 资源元素：</span><br><span class="line">/epics/5</span><br><span class="line"></span><br><span class="line">定制有效载荷大小</span><br><span class="line">GET /stories?include=subTasks</span><br></pre></td></tr></table></figure></li>
+<li><p>HTTP Method</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">增（POST：非幂等性）: 使用POST方法创建新的资源。</span><br><span class="line">删（DELETE：幂等性）: 使用DELETE方法删除存在的资源。</span><br><span class="line">改（PUT：幂等性）: 使用PUT或PATCH方法来更新已存在的资源。</span><br><span class="line">查: 使用GET方法读取资源。（GET：幂等性）</span><br></pre></td></tr></table></figure></li>
+<li><p>HTTP 状态码</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">200: Success 成功</span><br><span class="line">304: Not Modified 未修改</span><br><span class="line">400: Bad Request 客户端请求语法错误</span><br><span class="line">401: Unauthorized 未授权</span><br><span class="line">403: Forbidden 禁止访问</span><br><span class="line">404: Not Found 资源无法找到</span><br><span class="line">429: Too Many Requests 客户端的请求次数超过限额</span><br><span class="line">500: Internal Server Error 服务器错误</span><br><span class="line">503: Service Unavailable 系统维护</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>返回值结构<br>错误示例:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"code"</span>: <span class="number">1001</span>,</span><br><span class="line">  <span class="attr">"msg"</span>: <span class="string">"数据更新失败"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>成功示例：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"code"</span>: <span class="number">0</span>,</span><br><span class="line">  <span class="attr">"msg"</span>: <span class="string">"ok"</span>,</span><br><span class="line">  <span class="attr">"data"</span>: &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Git提交规范"><a href="#Git提交规范" class="headerlink" title="Git提交规范"></a>Git提交规范</h3><ul>
+<li>feat：新功能（feature）</li>
+<li>fix：修补bug</li>
+<li>docs：文档（documentation）</li>
+<li>style： 格式（不影响代码运行的变动）</li>
+<li>refactor：重构（即不是新增功能，也不是修改bug的代码变动）</li>
+<li>test：增加测试</li>
+<li>chore：构建过程或辅助工具的变动</li>
+</ul>
+<h2 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.</span><br><span class="line">├── cmd: 服务命令</span><br><span class="line">├── dao: 数据访问层</span><br><span class="line">├── models: 数据模型</span><br><span class="line">├── router: 路由</span><br><span class="line">├── middlewares: http中间件</span><br><span class="line">├── service: 业务逻辑层</span><br><span class="line">├── util: 工具包</span><br><span class="line">│   ├── database: 数据库</span><br><span class="line">│   ├── jwt: 令牌</span><br><span class="line">│   ├── log: 日志</span><br><span class="line">│   └── email: 邮件</span><br><span class="line">└── vendor: 项目所需外部包</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目分层图"><a href="#项目分层图" class="headerlink" title="项目分层图"></a>项目分层图</h2><p><img src="http://assets.processon.com/chart_image/5ee9840fe0b34d4dba40cfb7.png" alt></p>
+<h2 id="License"><a href="#License" class="headerlink" title="License"></a>License</h2><p>© JiangYang, 2020~time.Now</p>
+<p>Released under the Apache <a href="https://github.com/comeonjy/go-web/blob/master/LICENSE" target="_blank" rel="noopener">License</a></p>
+]]></content>
+      <categories>
+        <category>Github</category>
+      </categories>
+      <tags>
+        <tag>轮子</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>etcd集群部署</title>
     <url>/2020/10/13/Tool/etcd%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<h3 id="创建虚拟机"><a href="#创建虚拟机" class="headerlink" title="创建虚拟机"></a>创建虚拟机</h3><figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">Vagrant.configure(<span class="string">"2"</span>) <span class="keyword">do</span> |config|</span><br><span class="line">  (1..3).each <span class="keyword">do</span> |i|</span><br><span class="line">	config.vm.define <span class="string">"node-#&#123;i&#125;"</span> <span class="keyword">do</span> |node|</span><br><span class="line">          node.vm.box = <span class="string">"centos7"</span></span><br><span class="line">          node.vm.hostname = <span class="string">"node-#&#123;i&#125;"</span></span><br><span class="line">          node.vm.network <span class="string">"private_network"</span>, ip: <span class="string">"192.168.33.#&#123;i&#125;"</span></span><br><span class="line">          node.vm.provider <span class="string">"virtualbox"</span> <span class="keyword">do</span> |vb|</span><br><span class="line">            vb.memory = <span class="string">"1024"</span></span><br><span class="line">            vb.cpus = 1</span><br><span class="line">          end</span><br><span class="line">	end</span><br><span class="line">  end</span><br><span class="line">end</span><br></pre></td></tr></table></figure><a id="more"></a>
@@ -36,7 +85,7 @@
 
 <h3 id="验证集群状态"><a href="#验证集群状态" class="headerlink" title="验证集群状态"></a>验证集群状态</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">etcdctl --endpoints=&quot;http://192.168.33.1:2379,http://192.168.33.2:2379,http://192.168.33.3:2379&quot; endpoint health</span><br></pre></td></tr></table></figure>
 
-<h3 id><a href="#" class="headerlink" title></a></h3>]]></content>
+]]></content>
       <categories>
         <category>Tool</category>
       </categories>
@@ -665,16 +714,16 @@
       </tags>
   </entry>
   <entry>
-    <title>face-go-sdk</title>
-    <url>/2019/11/16/Github/face-go-sdk/</url>
-    <content><![CDATA[<h2 id="百度人脸识别SDK-go"><a href="#百度人脸识别SDK-go" class="headerlink" title="百度人脸识别SDK-go"></a>百度人脸识别SDK-go</h2><p>实现功能：</p><ul>
+    <title>go-baiduai</title>
+    <url>/2019/11/16/Github/go-baiduai/</url>
+    <content><![CDATA[<h2 id="百度人脸识别SDK-GO"><a href="#百度人脸识别SDK-GO" class="headerlink" title="百度人脸识别SDK-GO"></a>百度人脸识别SDK-GO</h2><p>实现功能：</p><ul>
 <li><input checked disabled type="checkbox"> 人脸库管理</li>
 <li><input checked disabled type="checkbox"> 在线活体检测</li>
 <li><input checked disabled type="checkbox"> 人脸搜索</li>
 <li><input checked disabled type="checkbox"> 人脸对比</li>
 <li><input checked disabled type="checkbox"> 身份认证</li>
 <li><input checked disabled type="checkbox"> 手势识别</li>
-</ul><p>github: <a href="https://github.com/comeonjy/face-go-sdk" target="_blank" rel="noopener">https://github.com/comeonjy/face-go-sdk</a></p>]]></content>
+</ul><p>github: <a href="https://github.com/comeonjy/go-baiduai" target="_blank" rel="noopener">https://github.com/comeonjy/go-baiduai</a></p>]]></content>
       <categories>
         <category>Github</category>
       </categories>

@@ -161,7 +161,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">21</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -211,6 +211,119 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/12/01/Golang/sync.Once/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.jpeg">
+      <meta itemprop="name" content="江杨">
+      <meta itemprop="description" content="comeonjy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="孤独的风中一匹狼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/12/01/Golang/sync.Once/" class="post-title-link" itemprop="url">sync.Once</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-12-01 17:35:35" itemprop="dateCreated datePublished" datetime="2019-12-01T17:35:35+08:00">2019-12-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-18 15:22:34" itemprop="dateModified" datetime="2020-07-18T15:22:34+08:00">2020-07-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Golang/" itemprop="url" rel="index">
+                    <span itemprop="name">Golang</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2019/12/01/Golang/sync.Once/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/12/01/Golang/sync.Once/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="sync-Once解析"><a href="#sync-Once解析" class="headerlink" title="sync.Once解析"></a>sync.Once解析</h2><blockquote>
+<p>sync.Once是sync包的一个对象，它只有一个Do方法，sync.Once.Do(f func())只会执行一次</p>
+</blockquote><p>上源码：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Copyright 2009 The Go Authors. All rights reserved.</span></span><br><span class="line"><span class="comment">// Use of this source code is governed by a BSD-style</span></span><br><span class="line"><span class="comment">// license that can be found in the LICENSE file.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> sync</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"sync/atomic"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Once is an object that will perform exactly one action.</span></span><br><span class="line"><span class="keyword">type</span> Once <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// done indicates whether the action has been performed.</span></span><br><span class="line">	<span class="comment">// It is first in the struct because it is used in the hot path.</span></span><br><span class="line">	<span class="comment">// The hot path is inlined at every call site.</span></span><br><span class="line">	<span class="comment">// Placing done first allows more compact instructions on some architectures (amd64/x86),</span></span><br><span class="line">	<span class="comment">// and fewer instructions (to calculate offset) on other architectures.</span></span><br><span class="line">	done <span class="keyword">uint32</span></span><br><span class="line">	m    Mutex</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Do calls the function f if and only if Do is being called for the</span></span><br><span class="line"><span class="comment">// first time for this instance of Once. In other words, given</span></span><br><span class="line"><span class="comment">// 	var once Once</span></span><br><span class="line"><span class="comment">// if once.Do(f) is called multiple times, only the first call will invoke f,</span></span><br><span class="line"><span class="comment">// even if f has a different value in each invocation. A new instance of</span></span><br><span class="line"><span class="comment">// Once is required for each function to execute.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Do is intended for initialization that must be run exactly once. Since f</span></span><br><span class="line"><span class="comment">// is niladic, it may be necessary to use a function literal to capture the</span></span><br><span class="line"><span class="comment">// arguments to a function to be invoked by Do:</span></span><br><span class="line"><span class="comment">// 	config.once.Do(func() &#123; config.init(filename) &#125;)</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Because no call to Do returns until the one call to f returns, if f causes</span></span><br><span class="line"><span class="comment">// Do to be called, it will deadlock.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// If f panics, Do considers it to have returned; future calls of Do return</span></span><br><span class="line"><span class="comment">// without calling f.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">Do</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">	<span class="comment">// Note: Here is an incorrect implementation of Do:</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">//	if atomic.CompareAndSwapUint32(&amp;o.done, 0, 1) &#123;</span></span><br><span class="line">	<span class="comment">//		f()</span></span><br><span class="line">	<span class="comment">//	&#125;</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="comment">// Do guarantees that when it returns, f has finished.  </span></span><br><span class="line">	<span class="comment">// This implementation would not implement that guarantee:</span></span><br><span class="line">	<span class="comment">// given two simultaneous calls, the winner of the cas would</span></span><br><span class="line">	<span class="comment">// call f, and the second would return immediately, without</span></span><br><span class="line">	<span class="comment">// waiting for the first's call to f to complete.</span></span><br><span class="line">	<span class="comment">// This is why the slow path falls back to a mutex, and why</span></span><br><span class="line">	<span class="comment">// the atomic.StoreUint32 must be delayed until after f returns.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 使用原子操作，done为0时表示未执行</span></span><br><span class="line">	<span class="keyword">if</span> atomic.LoadUint32(&amp;o.done) == <span class="number">0</span> &#123;</span><br><span class="line">		<span class="comment">// Outlined slow-path to allow inlining of the fast-path.</span></span><br><span class="line">		o.doSlow(f)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(o *Once)</span> <span class="title">doSlow</span><span class="params">(f <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">  <span class="comment">// 给将要执行的方法加互斥锁，避免并发问题</span></span><br><span class="line">	o.m.Lock()</span><br><span class="line">  <span class="comment">// 解锁，程序panic后会依次执行defer函数，这里使用defer保证了即使程序panic也能正常解锁</span></span><br><span class="line">	<span class="keyword">defer</span> o.m.Unlock()</span><br><span class="line">  <span class="comment">// 再次判断计数器的值是否为0，避免f()首次执行完成之前，有多个协程进入doSlow方法等待锁</span></span><br><span class="line">	<span class="keyword">if</span> o.done == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="comment">// 原子操作给done赋值为1，表示已经执行过</span></span><br><span class="line">		<span class="keyword">defer</span> atomic.StoreUint32(&amp;o.done, <span class="number">1</span>)</span><br><span class="line">		f()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/12/01/Golang/sync.Once/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -772,7 +885,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/11/16/Github/face-go-sdk/">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/11/16/Github/go-baiduai/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/logo.jpeg">
@@ -786,7 +899,7 @@
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
           
-            <a href="/2019/11/16/Github/face-go-sdk/" class="post-title-link" itemprop="url">face-go-sdk</a>
+            <a href="/2019/11/16/Github/go-baiduai/" class="post-title-link" itemprop="url">go-baiduai</a>
         </h1>
 
         <div class="post-meta">
@@ -803,7 +916,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-01 12:34:35" itemprop="dateModified" datetime="2020-03-01T12:34:35+08:00">2020-03-01</time>
+                <time title="修改时间：2020-10-24 18:17:27" itemprop="dateModified" datetime="2020-10-24T18:17:27+08:00">2020-10-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -826,8 +939,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/11/16/Github/face-go-sdk/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/16/Github/face-go-sdk/" itemprop="commentCount"></span>
+    <a title="valine" href="/2019/11/16/Github/go-baiduai/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/16/Github/go-baiduai/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -837,7 +950,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>90</span>
+              <span>89</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -856,14 +969,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="百度人脸识别SDK-go"><a href="#百度人脸识别SDK-go" class="headerlink" title="百度人脸识别SDK-go"></a>百度人脸识别SDK-go</h2><p>实现功能：</p><ul>
+          <h2 id="百度人脸识别SDK-GO"><a href="#百度人脸识别SDK-GO" class="headerlink" title="百度人脸识别SDK-GO"></a>百度人脸识别SDK-GO</h2><p>实现功能：</p><ul>
 <li><input checked disabled type="checkbox"> 人脸库管理</li>
 <li><input checked disabled type="checkbox"> 在线活体检测</li>
 <li><input checked disabled type="checkbox"> 人脸搜索</li>
 <li><input checked disabled type="checkbox"> 人脸对比</li>
 <li><input checked disabled type="checkbox"> 身份认证</li>
 <li><input checked disabled type="checkbox"> 手势识别</li>
-</ul><p>github: <a href="https://github.com/comeonjy/face-go-sdk" target="_blank" rel="noopener">https://github.com/comeonjy/face-go-sdk</a></p>
+</ul><p>github: <a href="https://github.com/comeonjy/go-baiduai" target="_blank" rel="noopener">https://github.com/comeonjy/go-baiduai</a></p>
       
     </div>
 
@@ -1250,109 +1363,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/10/30/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/logo.jpeg">
-      <meta itemprop="name" content="江杨">
-      <meta itemprop="description" content="comeonjy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="孤独的风中一匹狼">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/10/30/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-10-30 22:09:07" itemprop="dateCreated datePublished" datetime="2019-10-30T22:09:07+08:00">2019-10-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-01 12:36:31" itemprop="dateModified" datetime="2020-03-01T12:36:31+08:00">2020-03-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%BF%98%E6%B2%A1%E6%83%B3%E5%A5%BD/" itemprop="url" rel="index">
-                    <span itemprop="name">还没想好</span>
-                  </a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/10/30/hello-world/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/10/30/hello-world/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>25</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>欢迎来到我的博客</p><h2 id="说些什么呢？"><a href="#说些什么呢？" class="headerlink" title="说些什么呢？"></a>说些什么呢？</h2><p>……………………………</p>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1403,7 +1413,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1464,12 +1474,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">24k</span>
+    <span title="站点总字数">26k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22 分钟</span>
+    <span title="站点阅读时长">23 分钟</span>
 </div>
 
         
