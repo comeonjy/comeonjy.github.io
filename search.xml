@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Go垃圾回收</title>
+    <url>/2021/02/23/Golang/Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/</url>
+    <content><![CDATA[<h2 id="Go1-3"><a href="#Go1-3" class="headerlink" title="Go1.3"></a>Go1.3</h2><p>标记清扫</p><ul>
+<li>标记阶段：从根节点出发查找并标记堆中存活的对象</li>
+<li>清扫阶段：遍历堆中全部对象，回收未被标记的垃圾对象并将回收的内存加入空闲链表</li>
+</ul><h2 id="Go1-5"><a href="#Go1-5" class="headerlink" title="Go1.5"></a>Go1.5</h2><p>三色标记法</p><ul>
+<li>遍历根节点，将遍历到的对象从白色放入灰色</li>
+<li>遍历灰色集合，将其引用的对象置灰，自身置黑</li>
+<li>重复上一步骤，直至无灰色对象</li>
+<li>回收白色对象</li>
+</ul><h2 id="Go1-8"><a href="#Go1-8" class="headerlink" title="Go1.8"></a>Go1.8</h2><a id="more"></a>
+
+
+
+<p>混合写屏障：解决黑色对象引用白色对象造成的误杀</p>
+<ul>
+<li>GC开始时，将栈上的对象标记为黑色</li>
+<li>GC期间，任何栈上创建的新对象均为黑色</li>
+<li>删除或添加的对象标为灰色</li>
+</ul>
+<p>屏障机制</p>
+<p>强三色不变式：不允许黑色对象引用白色对象</p>
+<p>弱三色不变式：所有黑色对象引用的对象都处于灰色保护状态，只要存在未访问的能够到达白色对象的路径，就可以将黑色对象指向白色对象。</p>
+<p>写屏障：A引用B的时候，B被标记为灰（缺点：STW并对栈空间重新扫描）</p>
+<p>删除屏障：被删除的对象标记为灰色（缺点：不精确，STW扫描堆栈）</p>
+<p>辅助GC：为防止heap增速过快，在GC执行过程中如果同时运行的G分配了内存，那么这个G会被要求辅助GC做标记 或清扫工作。</p>
+]]></content>
+      <tags>
+        <tag>GO</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Prometheus+Grafana监控系统搭建</title>
+    <url>/2020/10/28/Tool/Prometheus+Grafana/</url>
+    <content><![CDATA[<p>#</p><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -d -p 3000:3000 --name=grafana grafana/grafana:6.5.0</span><br><span class="line"></span><br><span class="line">docker run --name prometheus -d -p 9090:9090 prom/prometheus:v2.22.0</span><br><span class="line"></span><br><span class="line">docker run -d -p 9104:9104 -e DATA_SOURCE_NAME=&quot;exporter:exporter@(172.17.0.4:3306)/&quot; --name mysql-exporter prom/mysqld-exporter:v0.12.1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CREATE USER &apos;exporter&apos;@&apos;%&apos; IDENTIFIED BY &apos;exporter&apos; WITH MAX_USER_CONNECTIONS 3;</span><br><span class="line">GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO &apos;exporter&apos;@&apos;%&apos;;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run -d -p 3306:3306 -v /Users/jiangyang/docker/mysql/conf.d:/etc/mysql/conf.d -v /Users/jiangyang/docker/mysql/data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=123456 --name mysql mysql:8.0</span><br><span class="line"></span><br><span class="line"># ALTER USER &apos;root&apos;@&apos;%&apos; IDENTIFIED WITH mysql_native_password BY &apos;123456&apos;;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">修改目标服务器中 /etc/ssh/sshd_config 中的参数：</span><br><span class="line">将PasswordAuthentication no中的“no”改为yes，如果有注释，将注释去掉</span><br><span class="line"></span><br><span class="line">之后service sshd restart 重启sshd服务就可以了</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Tool</category>
+      </categories>
+      <tags>
+        <tag>正则</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>go-web</title>
     <url>/2020/10/24/Github/go-web/</url>
     <content><![CDATA[<h1 id="GO-WEB-业务框架"><a href="#GO-WEB-业务框架" class="headerlink" title="GO-WEB 业务框架"></a>GO-WEB 业务框架</h1><p>github: <a href="https://github.com/comeonjy/go-web" target="_blank" rel="noopener">https://github.com/comeonjy/go-web</a></p><h2 id="Git-Flow-分支管理"><a href="#Git-Flow-分支管理" class="headerlink" title="Git Flow 分支管理"></a>Git Flow 分支管理</h2><ul>
@@ -466,6 +518,12 @@
 
 
 <h2 id="git更换push提交地址"><a href="#git更换push提交地址" class="headerlink" title="git更换push提交地址"></a>git更换push提交地址</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git remote rm origin // 删除远程地址</span><br><span class="line">git remote add origin http://github.com/xxx/xxx.git // 更换远程地址</span><br><span class="line">git push --set-upstream origin benchname  // 把当前分支与远程分支进行关联</span><br><span class="line">或者</span><br><span class="line">git push -u origin benchname</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="git修改上次commit"><a href="#git修改上次commit" class="headerlink" title="git修改上次commit"></a>git修改上次commit</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+
+<h2 id="git允许空白提交"><a href="#git允许空白提交" class="headerlink" title="git允许空白提交"></a>git允许空白提交</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git commit --allow-empty -m &quot;something&quot;</span><br></pre></td></tr></table></figure>
 
 ]]></content>
       <categories>
