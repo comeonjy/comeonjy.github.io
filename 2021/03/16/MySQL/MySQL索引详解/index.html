@@ -52,18 +52,18 @@
   };
 </script>
 
-  <meta name="description" content="欢迎来到我的博客说些什么呢？……………………………">
-<meta name="keywords" content="hello">
+  <meta name="description" content="索引概述 索引设计  数据结构尽量简单，主要是数据之间的比较 尽量不为空，索引不会包含有空值的列 前缀索引，指定索引长度 避免or条件，如果or条件前面部分使用索引后面没用，则会放弃所有索引 在列上进行运算或以通配符开头的like不会使用索引  最左前缀原则  查询必须从索引最左边开始，且不能跳过 不能使用范围查询右边的列">
+<meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http:&#x2F;&#x2F;blog.jiangyang.me&#x2F;2019&#x2F;10&#x2F;30&#x2F;hello-world&#x2F;index.html">
+<meta property="og:title" content="MySQL索引详解">
+<meta property="og:url" content="http:&#x2F;&#x2F;blog.jiangyang.me&#x2F;2021&#x2F;03&#x2F;16&#x2F;MySQL&#x2F;MySQL%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3&#x2F;index.html">
 <meta property="og:site_name" content="孤独的风中一匹狼">
-<meta property="og:description" content="欢迎来到我的博客说些什么呢？……………………………">
+<meta property="og:description" content="索引概述 索引设计  数据结构尽量简单，主要是数据之间的比较 尽量不为空，索引不会包含有空值的列 前缀索引，指定索引长度 避免or条件，如果or条件前面部分使用索引后面没用，则会放弃所有索引 在列上进行运算或以通配符开头的like不会使用索引  最左前缀原则  查询必须从索引最左边开始，且不能跳过 不能使用范围查询右边的列">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-03-01T04:36:31.303Z">
+<meta property="og:updated_time" content="2021-03-16T07:34:30.930Z">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://blog.jiangyang.me/2019/10/30/hello-world/">
+<link rel="canonical" href="http://blog.jiangyang.me/2021/03/16/MySQL/MySQL%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3/">
 
 
 <script id="page-configurations">
@@ -77,7 +77,7 @@
   };
 </script>
 
-  <title>Hello World | 孤独的风中一匹狼</title>
+  <title>MySQL索引详解 | 孤独的风中一匹狼</title>
   
 
 
@@ -216,7 +216,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/10/30/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2021/03/16/MySQL/MySQL%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/logo.jpeg">
@@ -229,7 +229,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World
+          MySQL索引详解
         </h1>
 
         <div class="post-meta">
@@ -238,24 +238,18 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2019-10-30 22:09:07" itemprop="dateCreated datePublished" datetime="2019-10-30T22:09:07+08:00">2019-10-30</time>
+              <time title="创建时间：2021-03-16 09:55:31 / 修改时间：15:34:30" itemprop="dateCreated datePublished" datetime="2021-03-16T09:55:31+08:00">2021-03-16</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-01 12:36:31" itemprop="dateModified" datetime="2020-03-01T12:36:31+08:00">2020-03-01</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%BF%98%E6%B2%A1%E6%83%B3%E5%A5%BD/" itemprop="url" rel="index">
-                    <span itemprop="name">还没想好</span>
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
                   </a>
                 </span>
             </span>
@@ -276,8 +270,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/10/30/hello-world/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/10/30/hello-world/" itemprop="commentCount"></span>
+    <a title="valine" href="/2021/03/16/MySQL/MySQL%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/16/MySQL/MySQL%E7%B4%A2%E5%BC%95%E8%AF%A6%E8%A7%A3/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -287,14 +281,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>25</span>
+              <span>2.1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -306,7 +300,143 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>欢迎来到我的博客</p><h2 id="说些什么呢？"><a href="#说些什么呢？" class="headerlink" title="说些什么呢？"></a>说些什么呢？</h2><p>……………………………</p>
+        <h2 id="索引概述"><a href="#索引概述" class="headerlink" title="索引概述"></a>索引概述</h2><blockquote>
+<p>索引设计</p>
+</blockquote><ul>
+<li>数据结构尽量简单，主要是数据之间的比较</li>
+<li>尽量不为空，索引不会包含有空值的列</li>
+<li>前缀索引，指定索引长度</li>
+<li>避免or条件，如果or条件前面部分使用索引后面没用，则会放弃所有索引</li>
+<li>在列上进行运算或以通配符开头的like不会使用索引</li>
+</ul><blockquote>
+<p>最左前缀原则</p>
+</blockquote><ul>
+<li>查询必须从索引最左边开始，且不能跳过</li>
+<li>不能使用范围查询右边的列</li>
+</ul><a id="more"></a>
+
+
+
+<blockquote>
+<p>索引排序</p>
+</blockquote>
+<ul>
+<li>索引顺序与order by顺序相同，且为同方向</li>
+<li>与查询条件一样需要遵循最左匹配原则，where条件也加入评估</li>
+<li>连表查询时，仅当order by的所有条件都为第一个表时，才能使用索引</li>
+</ul>
+<blockquote>
+<p>索引分类</p>
+</blockquote>
+<ul>
+<li><p>InnoDB</p>
+<ul>
+<li><p>主键索引（聚簇索引）</p>
+<p>节点页只包含索引，叶子页包含全部行数据（聚簇索引就是表）</p>
+<p>InnoDB对主键建立聚簇索引，如果没有主键则选择唯一非空字段，否则就定义一个隐藏主键（一个表只有一个聚簇索引）</p>
+</li>
+<li><p>二级索引（非聚簇索引）</p>
+<p>叶子节点存储的是索引key和主键值</p>
+</li>
+</ul>
+</li>
+<li><p>MyISAM</p>
+<ul>
+<li><p>非聚簇索引</p>
+<p>叶子节点存储指向数据的指针</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="索引实现原理"><a href="#索引实现原理" class="headerlink" title="索引实现原理"></a>索引实现原理</h2><blockquote>
+<p>索引数据结构</p>
+</blockquote>
+<ul>
+<li><p>平衡二叉树</p>
+<p>任何两个节点高度差不超过1</p>
+<p>基于二分法策略，提高数据查询速度的数据结构</p>
+</li>
+<li><p>B树（B-Tree）</p>
+<p>B-Tree（多叉树）：平衡多路查找树</p>
+<p>排序方式：从左到右递增</p>
+<p>所有叶子阶段均在同一层（稳定），非叶子节点保存关键字记录指针</p>
+</li>
+<li><p>B+Tree</p>
+<p>非叶子节点不保存关键字记录指针</p>
+<p>叶子节点保存了父节点所有关键字记录的指针</p>
+<p>关键字在叶子节点从小到大依次排序，左边结尾数据保存一个右边开始数据的指针</p>
+<p>每一个叶子节点包含指向下一个叶子节点的指针，方便范围遍历</p>
+<p>优点：能保存更多关键字，减少磁盘IO，系统从磁盘读取数据到内存是以磁盘块为单位，位于同一磁盘块的数据会被一次性读出来</p>
+</li>
+</ul>
+<h2 id="索引优化"><a href="#索引优化" class="headerlink" title="索引优化"></a>索引优化</h2><p>mysql的优化可以从很多方面进行，如硬件，磁盘读写速度会影响mysql效率，环境的搭建，比如读写分离，参数配置，表结构设计，字段类型选用，sql书写，索引构建等等</p>
+<p>sql执行顺序：from -&gt; on -&gt; join -&gt; where -&gt; group by -&gt; having -&gt; select -&gt; distinct -&gt; order by - &gt; limit</p>
+<blockquote>
+<p>explain用法</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain SELECT * FROM users;</span><br><span class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+</span><br><span class="line">| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra |</span><br><span class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+</span><br><span class="line">|  1 | SIMPLE      | users | NULL       | ALL  | NULL          | NULL | NULL    | NULL |  288 |   100.00 | NULL  |</span><br><span class="line">+----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+</span><br><span class="line">1 row in set (0.04 sec)</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>explain结果解释</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>执行编号</td>
+</tr>
+<tr>
+<td>select_type</td>
+<td>查询类型<br>1、SIMPLE    简单查询<br>2、PRIMARY    查询中若包含任何复杂子部分，最外层select被标记为PRIMARY<br>3、UNION    UNION后面的select语句<br>4、UNION RESULT    UNION的结果<br>5、DEPENDENT UNION    UNION依赖于外层查询<br>6、DERIVED   衍生表，FROM字句的子查询<br>7、SUBQUERY    子查询<br>8、DEPENDENT SUBQUREY    子查询依赖于外层查询<br>9、UNCACHEABLE SUBQUERY    不能缓存的子查询</td>
+</tr>
+<tr>
+<td>table</td>
+<td>查询涉及的表或衍生表</td>
+</tr>
+<tr>
+<td>partitions</td>
+<td>分区命中情况</td>
+</tr>
+<tr>
+<td>type</td>
+<td>访问类型<br>1、system：表中只有一条数据，是const的特例<br>2、const：针对主键或唯一索引等值查询扫描<br>3、eq_ref：通常用于多表join，对于前表的的每一个结果，都只能匹配到后表的一条结果<br>4、range：索引范围查询<br>5、index：全索引扫描<br>6、all：全表扫描</td>
+</tr>
+<tr>
+<td>possible_keys</td>
+<td>可能使用的索引</td>
+</tr>
+<tr>
+<td>key</td>
+<td>真正使用的索引</td>
+</tr>
+<tr>
+<td>Key_len</td>
+<td>使用的索引字节数</td>
+</tr>
+<tr>
+<td>ref</td>
+<td>表示连接匹配条件</td>
+</tr>
+<tr>
+<td>rows</td>
+<td>扫描行数</td>
+</tr>
+<tr>
+<td>filtered</td>
+<td>返回结果的行占读取结果的行的百分比</td>
+</tr>
+<tr>
+<td>Extra</td>
+<td>额外信息<br>1、Using filesort：文件排序，效率低<br>2、Using index：覆盖索引扫描，表示在查询数中就可以找到所需数据，不用扫描数据文件<br>3、Using temporary：查询使用临时表，一般用于排序分组和join，效率不高<br>4、Using join buffer：获取连接条件时未使用索引</td>
+</tr>
+</tbody></table>
+<h2 id="未完待续…"><a href="#未完待续…" class="headerlink" title="未完待续…"></a>未完待续…</h2>
     </div>
 
     
@@ -323,24 +453,21 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/hello/" rel="tag"><i class="fa fa-tag"></i> hello</a>
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/10/30/Golang/RPC%20AND%20Protobuf/" rel="next" title="RPC AND Protobuf">
-                  <i class="fa fa-chevron-left"></i> RPC AND Protobuf
+                <a href="/2021/02/23/Golang/Go%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="next" title="Go垃圾回收">
+                  <i class="fa fa-chevron-left"></i> Go垃圾回收
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/10/30/Book/%E7%9A%AE%E5%9B%8A/" rel="prev" title="皮囊">
-                  皮囊 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -380,7 +507,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#说些什么呢？"><span class="nav-number">1.</span> <span class="nav-text">说些什么呢？</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#索引概述"><span class="nav-number">1.</span> <span class="nav-text">索引概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引实现原理"><span class="nav-number">2.</span> <span class="nav-text">索引实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引优化"><span class="nav-number">3.</span> <span class="nav-text">索引优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#未完待续…"><span class="nav-number">4.</span> <span class="nav-text">未完待续…</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
