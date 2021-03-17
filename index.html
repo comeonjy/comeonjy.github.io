@@ -161,7 +161,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">25</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">26</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -211,6 +211,132 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2021/03/17/MySQL/MySQL%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.jpeg">
+      <meta itemprop="name" content="江杨">
+      <meta itemprop="description" content="comeonjy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="孤独的风中一匹狼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/03/17/MySQL/MySQL%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/" class="post-title-link" itemprop="url">MySQL事务与并发控制</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-03-17 10:44:00 / 修改时间：18:04:30" itemprop="dateCreated datePublished" datetime="2021-03-17T10:44:00+08:00">2021-03-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/MySQL/" itemprop="url" rel="index">
+                    <span itemprop="name">MySQL</span>
+                  </a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2021/03/17/MySQL/MySQL%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2021/03/17/MySQL/MySQL%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>636</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><blockquote>
+<p>ACID</p>
+</blockquote><ul>
+<li><p>原子性：一个事务必须被视为一个不可分割的最小工作单元，整个事务中的整个操作，要么全部成功提交，要么全部失败回滚</p>
+<p>实现原理：undo log（回滚日志）</p>
+<p>属于逻辑日志，记录事务SQL执行的相关信息，一旦发生回滚，根据InnoDB的undo log做与之相反的操作</p>
+</li>
+<li><p>一致性：数据总是从一个一致性状态转换为另一个一致性状态</p>
+</li>
+<li><p>隔离性：一个事务所做的修改在最终提交前，对其他事务是不可见的</p>
+<ul>
+<li>读未提交：一个事务可以读取到另一个事务未提交的修改（脏读）</li>
+<li>读已提交：一个事务只能读取到另一个事务已经提交的修改（不可重复读）</li>
+<li>可重复读：事务只能读取在它开始之前已经提交的修改，同一事务多次读取相同的数据返回结果一样（默认）</li>
+<li>串行化：事务串行化</li>
+</ul>
+</li>
+<li><p>持久性：事务一旦提交，其所作的修改就会永久保存在数据库中</p>
+<p>实现原理：redo log（重做日志）</p>
+<p>物理格式的日志，记录的是物理数据页面的修改信息</p>
+</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/03/17/MySQL/MySQL%E4%BA%8B%E5%8A%A1%E4%B8%8E%E5%B9%B6%E5%8F%91%E6%8E%A7%E5%88%B6/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -358,7 +484,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2021-02-23 10:18:01 / 修改时间：11:11:57" itemprop="dateCreated datePublished" datetime="2021-02-23T10:18:01+08:00">2021-02-23</time>
+              <time title="创建时间：2021-02-23 10:18:01 / 修改时间：11:12:32" itemprop="dateCreated datePublished" datetime="2021-02-23T10:18:01+08:00">2021-02-23</time>
             </span>
 
           
@@ -779,10 +905,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-10-09 10:59:30 / 修改时间：13:44:11" itemprop="dateCreated datePublished" datetime="2020-10-09T10:59:30+08:00">2020-10-09</time>
+              <time title="创建时间：2020-10-09 10:59:30" itemprop="dateCreated datePublished" datetime="2020-10-09T10:59:30+08:00">2020-10-09</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-17 10:42:37" itemprop="dateModified" datetime="2021-03-17T10:42:37+08:00">2021-03-17</time>
+              </span>
 
           
   
@@ -804,7 +936,7 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>794</span>
+              <span>811</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -823,7 +955,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Golang中defer、return和返回值"><a href="#Golang中defer、return和返回值" class="headerlink" title="Golang中defer、return和返回值"></a>Golang中defer、return和返回值</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">"a return:"</span>, a())  <span class="comment">// 打印结果为 a return: 0</span></span><br><span class="line">	fmt.Println(<span class="string">"b return:"</span>, b()) <span class="comment">// 打印结果为 b return: 3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">a</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer2:"</span>, i) <span class="comment">// 打印结果为 a defer2: 2</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer1:"</span>, i) <span class="comment">// 打印结果为 a defer1: 1</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">b</span><span class="params">()</span> <span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> j = <span class="number">2</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer2: j="</span>, j) <span class="comment">// 打印结果为 b defer2: j= 4</span></span><br><span class="line">		fmt.Println(<span class="string">"b defer2: i="</span>, i) <span class="comment">// 打印结果为 b defer2: i= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer1: j="</span>, j) <span class="comment">// 打印结果为 b defer1: j= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> j </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <h2 id="Golang中defer、return和返回值"><a href="#Golang中defer、return和返回值" class="headerlink" title="Golang中defer、return和返回值"></a>Golang中defer、return和返回值</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">"a return:"</span>, a())  <span class="comment">// 打印结果为 a return: 0</span></span><br><span class="line">	fmt.Println(<span class="string">"b return:"</span>, b()) <span class="comment">// 打印结果为 b return: 3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">a</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer2:"</span>, i) <span class="comment">// 打印结果为 a defer2: 2</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer1:"</span>, i) <span class="comment">// 打印结果为 a defer1: 1</span></span><br><span class="line">	&#125;()</span><br><span class="line">  <span class="keyword">return</span> i <span class="comment">// tempVar:=i</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">b</span><span class="params">()</span> <span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> j = <span class="number">2</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer2: j="</span>, j) <span class="comment">// 打印结果为 b defer2: j= 4</span></span><br><span class="line">		fmt.Println(<span class="string">"b defer2: i="</span>, i) <span class="comment">// 打印结果为 b defer2: i= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer1: j="</span>, j) <span class="comment">// 打印结果为 b defer1: j= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> j  <span class="comment">// i=j</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/#more" rel="contents">
@@ -990,7 +1122,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-17 11:54:17" itemprop="dateModified" datetime="2020-08-17T11:54:17+08:00">2020-08-17</time>
+                <time title="修改时间：2020-10-13 16:51:28" itemprop="dateModified" datetime="2020-10-13T16:51:28+08:00">2020-10-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1186,109 +1318,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2020/08/05/Tool/brew/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/logo.jpeg">
-      <meta itemprop="name" content="江杨">
-      <meta itemprop="description" content="comeonjy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="孤独的风中一匹狼">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/08/05/Tool/brew/" class="post-title-link" itemprop="url">brew 命令详解</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-08-05 18:40:35" itemprop="dateCreated datePublished" datetime="2020-08-05T18:40:35+08:00">2020-08-05</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-28 17:01:44" itemprop="dateModified" datetime="2020-08-28T17:01:44+08:00">2020-08-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tool/" itemprop="url" rel="index">
-                    <span itemprop="name">Tool</span>
-                  </a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2020/08/05/Tool/brew/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2020/08/05/Tool/brew/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>179</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 搜索软件</span></span><br><span class="line">brew search [TEXT|/REGEX/]</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查询已安装软件列表</span></span><br><span class="line">brew list</span><br><span class="line"><span class="meta">#</span><span class="bash"> 下载/卸载软件</span></span><br><span class="line">brew install/uninstall</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew</span></span><br><span class="line">brew update</span><br><span class="line"><span class="meta">#</span><span class="bash"> 更新brew下载的软件</span></span><br><span class="line">brew upgrade &lt;software_name&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 显示brew软件包根目录</span></span><br><span class="line">brew --repo</span><br></pre></td></tr></table></figure>
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1339,7 +1368,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">25</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1400,7 +1429,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">29k</span>
+    <span title="站点总字数">30k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
