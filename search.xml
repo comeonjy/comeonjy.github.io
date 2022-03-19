@@ -37,7 +37,7 @@
 <h3 id="Varint编码规则："><a href="#Varint编码规则：" class="headerlink" title="Varint编码规则："></a>Varint编码规则：</h3><p>每个字节的最高位表示下一字节是否仍然是编码内容，若最高位为1，则是。<br>每个字节的后七位则由小端表示数值的二进制值，并且高位补0<br>例如：300（0000 0001 0010 1100）编码结果为：1010 1100 0000 0010<br>注意：使用Varint编码负数效率低，所以引出ZigZag编码</p>
 <h3 id="ZigZag编码规则："><a href="#ZigZag编码规则：" class="headerlink" title="ZigZag编码规则："></a>ZigZag编码规则：</h3><p>pb编码中sint32、sint64使用ZigZag编码，让所有的负数都使用正数表示。<br>sint32：（ n &lt;&lt; 1 ） ^ ( n &gt;&gt; 31 )<br>sint64：（ n &lt;&lt; 1 ）^ （ n &gt;&gt; 63 ）<br>注意：算数右移时，若符号为位1（负数），则高位补1<br>即：将符号位移到数据位的后面，压缩掉无意义的0</p>
 <h3 id="Length-delimited编码规则："><a href="#Length-delimited编码规则：" class="headerlink" title="Length-delimited编码规则："></a>Length-delimited编码规则：</h3><p>Length-delimited 将长度和数据编码在一起，长度使用Varint编码方式<br>例如：（abc）编码结果为：4 97 98 99 （长度4，后面三字节是abc的ascii码）</p>
-<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p>[1] Google protobuf encoding </p>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p>[1] <a href="https://developers.google.com/protocol-buffers/docs/encoding" target="_blank" rel="noopener">Google protobuf encoding</a></p>
 ]]></content>
       <categories>
         <category>Tool</category>
@@ -80,7 +80,7 @@
 </tbody></table>
 <h3 id="功能："><a href="#功能：" class="headerlink" title="功能："></a>功能：</h3><p>CPU Profiling：CPU分析<br>Memory Profiling：内存分析<br>Block Profiling：阻塞分析<br>Mutext Profile：互斥锁分析<br>Goroutine Profiling：Goroutine分析</p>
 <h3 id="安装graphviz"><a href="#安装graphviz" class="headerlink" title="安装graphviz"></a>安装graphviz</h3><p>brew install graphviz</p>
-<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p>[1] <a href="https://blog.wolfogre.com/posts/go-ppof-practice/" target="_blank" rel="noopener">https://blog.wolfogre.com/posts/go-ppof-practice/</a><br>[2] <a href="https://golang2.eddycjy.com/posts/ch6/01-pprof-1/" target="_blank" rel="noopener">https://golang2.eddycjy.com/posts/ch6/01-pprof-1/</a></p>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><p>[1] <a href="https://blog.wolfogre.com/posts/go-ppof-practice/" target="_blank" rel="noopener">golang proof 实战</a><br>[2] <a href="https://golang2.eddycjy.com/posts/ch6/01-pprof-1/" target="_blank" rel="noopener">Go 大杀器之性能剖析 PProf</a></p>
 ]]></content>
       <categories>
         <category>Tool</category>
