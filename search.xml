@@ -106,7 +106,7 @@
 </ol>
 <ol start="2">
 <li><p>连接集群，拦截流量</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">telepresence connect # 连接集群</span><br><span class="line">telepresence intercept $(SERVER_NAME) --http-header=$(key)=$(value) -n default # 拦截指定服务流量</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 连接集群 （连接集群后即可使用服务名+namespace访问集群服务）</span><br><span class="line">telepresence connect </span><br><span class="line"># 拦截指定服务流量（首次使用需要登录Ambassador Cloud，按提示操作即可）</span><br><span class="line">telepresence intercept $(SERVER_NAME) --http-header=$(key)=$(value) -n default --port &lt;local port&gt;:&lt;svcPortIdentifier&gt;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -114,20 +114,15 @@
 </ol>
 <ol start="3">
 <li><p>启动本地服务</p>
-<ol>
-<li><p>命令行启动 </p>
-<blockquote>
-<p>go run main.go</p>
-</blockquote>
-</li>
-<li><p>Goland debug启动</p>
-</li>
+<ol start="2">
+<li>Goland debug启动（需关闭IDE HTTP代理，否则无法以服务名方式访问集群）</li>
+<li>Docker调试</li>
 </ol>
 <blockquote>
-<p>make debug-dev</p>
+<p>将服务部署至docker</p>
 <p>启动Goland远程调试</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"># 本地调试Makefile（根据自己服务情况调整脚本）</span><br><span class="line">debug-dev:export APP_ENV=dev</span><br><span class="line">debug-dev:</span><br><span class="line">	go build -gcflags &quot;all=-N -l&quot; main.go</span><br><span class="line">	dlv --listen=:2345 --headless=true --api-version=2 --accept-multiclient exec ./main</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// docker cmd启动命令</span><br><span class="line">dlv --listen=:2345 --headless=true --api-version=2 --accept-multiclient exec ./main</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>设置拦截header</p>
 <p>将<code>$(key)=$(value)</code>替换为自定义值并添加在插件中</p>
