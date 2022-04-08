@@ -1,6 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Context源码分析</title>
+    <url>/2022/04/09/Golang/Context/</url>
+    <content><![CDATA[<p>Go语言中Context携带截止日期、取消信号以及跨API边界和进程之间的其他请求作用域值，用来同步信号，设置超时时间，传递请求相关值等。</p><h3 id="Context接口定义"><a href="#Context接口定义" class="headerlink" title="Context接口定义"></a>Context接口定义</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Context <span class="keyword">interface</span> &#123;    </span><br><span class="line">  <span class="comment">// 返回上下文的截止日期 </span></span><br><span class="line">  Deadline() (deadline time.Time, ok <span class="keyword">bool</span>) </span><br><span class="line">  <span class="comment">// 返回一个channel，这个channel在工作完成会在上下文被取消时会被close </span></span><br><span class="line">  Done() &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125; </span><br><span class="line">  <span class="comment">// 返回上下文结束的错误原因 </span></span><br><span class="line">  Err() error </span><br><span class="line">  <span class="comment">// 从上下文中获取值 </span></span><br><span class="line">  Value(key any) any </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+<h3 id="Context类型"><a href="#Context类型" class="headerlink" title="Context类型"></a>Context类型</h3><h4 id="cancelCtx"><a href="#cancelCtx" class="headerlink" title="cancelCtx"></a>cancelCtx</h4><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> cancelCtx <span class="keyword">struct</span> &#123;   </span><br><span class="line">  <span class="comment">// 父级上下文   </span></span><br><span class="line">  Context   </span><br><span class="line">  <span class="comment">// 用于保护下面字段的互斥锁   </span></span><br><span class="line">  mu       sync.Mutex   </span><br><span class="line">  <span class="comment">// 用于通知上下文cancel的channel，首次cancel时被close              </span></span><br><span class="line">  done     atomic.Value   </span><br><span class="line">  <span class="comment">// 子context集合，首次cancel时设置为nil            </span></span><br><span class="line">  children <span class="keyword">map</span>[canceler]<span class="keyword">struct</span>&#123;&#125;    </span><br><span class="line">  <span class="comment">// 上下文cancel原因，首次调用cancel时设置值   </span></span><br><span class="line">  err      error                  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>cancelCtx的创建过程</p>
+</blockquote>
+<ol>
+<li><p>创建一个cancelCtx结构体，将父上下文包在结构体内</p>
+</li>
+<li><p>如果父上下文不具备取消功能（done==nil），就直接返回cancelCtx和cancel()回调函数</p>
+</li>
+<li><p>如果父上下文已经被取消，就取消掉当前上下文（cancelCtx）然后返回</p>
+</li>
+<li><p>找到父上下文底层cancelCtx</p>
+</li>
+<li><p>查找父上下文底层cancelCtx的过程</p>
+<pre><code>1. 查找父上下文最近一个实现了Done方法的底层上下文，包括父上下文自己；如果已经取消，则取消当前上下文；如果不具备取消功能（done==nil），启动协程监听当前上下文取消事件</code></pre><ol start="2">
+<li>查找父上下文最近一个cancelCtx类型的底层上下文，包括父上下文自己；如果没有则返回false</li>
+<li>通过检查两次查找的底层上下文done是否相等来判断查找到的是否为同一上下文，如果不同则返回false，相同就返回底层上下文的指针</li>
+<li>也就是说，如果自定义Context类型覆盖了父级的Done方法并且返回了非空的done，就返回false创建一个协程监听父上下文和当前创建的cancelCtx的取消操作，因为自定义Context类型没办法将自己放入自己的cancelCtx类型父上下文的children集合里，无法保证级联取消的连续性，所以这里需要创建一个协程来监听父子上下文。</li>
+</ol>
+</li>
+<li><p>如果存在，则将当前创建的cancelCtx保存到父上下文底层cancelCtx的children集合里，父上下文取消时会将所有children取消；</p>
+</li>
+<li><p>如果不存在，则创建一个协程监听父上下文和当前创建的cancelCtx的取消事件，父上下文被取消时会取消掉当前创建的cancelCtx</p>
+<p>这里可以理解为：找不到有效的cancelCtx类型的父上下文，加入它的children集合接收它的取消通知，就需要为当前cancelCtx创建一个监听协程。</p>
+</li>
+</ol>
+<blockquote>
+<p>cancelCtx的取消过程</p>
+</blockquote>
+<ol>
+<li>关闭done通道，此时所有阻塞等待Done()的协程都将得到释放</li>
+<li>调用children集合所有子上下文的cancel函数</li>
+<li>主动调用cancel方法会将自己从自己的父上下文的children集合中删除掉</li>
+</ol>
+<h4 id="timeCtx"><a href="#timeCtx" class="headerlink" title="timeCtx"></a>timeCtx</h4><p>通过在cancelCtx的基础上加上定时cancel实现</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> timerCtx <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 父上下文   </span></span><br><span class="line">	cancelCtx   </span><br><span class="line">	<span class="comment">// 定时执行cancel   </span></span><br><span class="line">	timer *time.Timer   </span><br><span class="line">	<span class="comment">// 最后期限   </span></span><br><span class="line">	deadline time.Time </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="valueCtx"><a href="#valueCtx" class="headerlink" title="valueCtx"></a>valueCtx</h4><p>通过在上下文中包裹 k、v 键值对实现</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> valueCtx <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 父上下文</span></span><br><span class="line">	Context</span><br><span class="line">	<span class="comment">// 键值对</span></span><br><span class="line">	key, val any</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>valueCtx通过key取值的过程</p>
+</blockquote>
+<ol>
+<li>首先比较当前上下文的key是否与目标一致</li>
+<li>然后逐层查找父上下文及其底层上下文的key是否匹配，直到最底层</li>
+</ol>
+<h3 id="emptyCtx"><a href="#emptyCtx" class="headerlink" title="emptyCtx"></a>emptyCtx</h3><p>系统默认的空上下文</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	background = <span class="built_in">new</span>(emptyCtx)</span><br><span class="line">	todo       = <span class="built_in">new</span>(emptyCtx)</span><br><span class="line">) </span><br><span class="line"><span class="keyword">type</span> emptyCtx <span class="keyword">int</span></span><br></pre></td></tr></table></figure>]]></content>
+      <tags>
+        <tag>GO</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Protobuf编码</title>
     <url>/2022/03/19/Tool/Protobuf/</url>
     <content><![CDATA[<h2 id="Protobuf编码格式"><a href="#Protobuf编码格式" class="headerlink" title="Protobuf编码格式"></a>Protobuf编码格式</h2><p>编码方式：HEAD1+MSG1+HEAD2+MSG2……<br>HEAD=(field_num &lt;&lt; 3) | wire_type</p><p>field_number：字段序号，可以任意顺序使用但不能重复<br>wire_type：数据类型</p><table>

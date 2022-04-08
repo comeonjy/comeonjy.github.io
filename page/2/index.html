@@ -161,7 +161,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">29</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">30</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -211,6 +211,106 @@
             
 
   <div class="posts-expand">
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/logo.jpeg">
+      <meta itemprop="name" content="江杨">
+      <meta itemprop="description" content="comeonjy">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="孤独的风中一匹狼">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/" class="post-title-link" itemprop="url">Golang中defer、return和函数返回值</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-09 10:59:30" itemprop="dateCreated datePublished" datetime="2020-10-09T10:59:30+08:00">2020-10-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-17 10:42:37" itemprop="dateModified" datetime="2021-03-17T10:42:37+08:00">2021-03-17</time>
+              </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-file-word-o"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>811</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-clock-o"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Golang中defer、return和返回值"><a href="#Golang中defer、return和返回值" class="headerlink" title="Golang中defer、return和返回值"></a>Golang中defer、return和返回值</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Println(<span class="string">"a return:"</span>, a())  <span class="comment">// 打印结果为 a return: 0</span></span><br><span class="line">	fmt.Println(<span class="string">"b return:"</span>, b()) <span class="comment">// 打印结果为 b return: 3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">a</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer2:"</span>, i) <span class="comment">// 打印结果为 a defer2: 2</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		fmt.Println(<span class="string">"a defer1:"</span>, i) <span class="comment">// 打印结果为 a defer1: 1</span></span><br><span class="line">	&#125;()</span><br><span class="line">  <span class="keyword">return</span> i <span class="comment">// tempVar:=i</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">b</span><span class="params">()</span> <span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> j = <span class="number">2</span></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		i++</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer2: j="</span>, j) <span class="comment">// 打印结果为 b defer2: j= 4</span></span><br><span class="line">		fmt.Println(<span class="string">"b defer2: i="</span>, i) <span class="comment">// 打印结果为 b defer2: i= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		j++</span><br><span class="line">		fmt.Println(<span class="string">"b defer1: j="</span>, j) <span class="comment">// 打印结果为 b defer1: j= 3</span></span><br><span class="line">	&#125;()</span><br><span class="line">	<span class="keyword">return</span> j  <span class="comment">// i=j</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/10/09/Golang/Golang%E4%B8%ADdefer%E3%80%81return%E5%92%8C%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
         
   
   
@@ -1197,119 +1297,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/11/25/Git/git%E6%94%BE%E5%BC%83%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/logo.jpeg">
-      <meta itemprop="name" content="江杨">
-      <meta itemprop="description" content="comeonjy">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="孤独的风中一匹狼">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/25/Git/git%E6%94%BE%E5%BC%83%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9/" class="post-title-link" itemprop="url">git放弃本地文件修改</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-25 20:18:01" itemprop="dateCreated datePublished" datetime="2019-11-25T20:18:01+08:00">2019-11-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-22 11:21:44" itemprop="dateModified" datetime="2020-03-22T11:21:44+08:00">2020-03-22</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Git/" itemprop="url" rel="index">
-                    <span itemprop="name">Git</span>
-                  </a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="fa fa-comment-o"></i>
-      </span>
-      <span class="post-meta-item-text">Valine：</span>
-    
-    <a title="valine" href="/2019/11/25/Git/git%E6%94%BE%E5%BC%83%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/11/25/Git/git%E6%94%BE%E5%BC%83%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-file-word-o"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>636</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-clock-o"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>你是否遇到过将代码改的乱七八糟想要放弃本地修改的情况呢，或者想要将部分文件恢复到最近一次提交，而剩下的部分继续保留呢？<br>下面我们根据当前工作区的状态分别实现这个想法<br>先理解一下这个图<br><img src="http://assets.processon.com/chart_image/5d9fdd95e4b06b7d6ec6c73e.png" alt="暂存区"></p><ul>
-<li>未使用add的的状态</li>
-</ul><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 指定放弃修改的文件（支持正则表达式，例如：*.go 指所有后缀为.go的文件）</span><br><span class="line">git checkout -- filename</span><br><span class="line"># 放弃所有修改，恢复到最近一次提交</span><br><span class="line">git checkout .</span><br><span class="line"></span><br><span class="line">注意：checkout不会删除新建的文件</span><br><span class="line">若要删除新建的文件，请使用以下命令</span><br><span class="line"></span><br><span class="line"># 显示将要删除的文件（如果有新增的文件夹，则不会显示，包括这个文件夹下的文件）</span><br><span class="line">git clean -n</span><br><span class="line"># 删除新增的文件，但不会删除新增的文件夹（包括这个文件夹下的文件）,path默认当前目录</span><br><span class="line">git clean -f &lt;path&gt;</span><br><span class="line"># 删除新增的文件和文件夹（包括文件夹下的文件）</span><br><span class="line">git clean -df</span><br><span class="line"># 删除新增的文件和文件夹包括被.gitignore过滤的文件和文件夹，慎用</span><br><span class="line">git clean -xdf</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/25/Git/git%E6%94%BE%E5%BC%83%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1360,7 +1347,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1421,12 +1408,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-area-chart"></i>
     </span>
-    <span title="站点总字数">32k</span>
+    <span title="站点总字数">34k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">30 分钟</span>
+    <span title="站点阅读时长">31 分钟</span>
 </div>
 
         

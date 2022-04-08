@@ -52,21 +52,18 @@
   };
 </script>
 
-  <meta name="description" content="Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。Markdown 语言在 2004 由约翰·格鲁伯（英语：John Gruber）创建。Markdown 编写的文档可以导出 HTML 、Word、图像、PDF、Epub 等多种格式的文档。Markdown 编写的文档后缀为 .md, .markdown。">
-<meta name="keywords" content="Markdown">
+  <meta name="description" content="Go语言中Context携带截止日期、取消信号以及跨API边界和进程之间的其他请求作用域值，用来同步信号，设置超时时间，传递请求相关值等。Context接口定义12345678910type Context interface &amp;#123;      &#x2F;&#x2F; 返回上下文的截止日期   Deadline() (deadline time.Time, ok bool)   &#x2F;&#x2F; 返回一个channel，">
+<meta name="keywords" content="GO">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Markdown语法">
-<meta property="og:url" content="http:&#x2F;&#x2F;blog.jiangyang.me&#x2F;2019&#x2F;10&#x2F;30&#x2F;Tool&#x2F;Markdown%E8%AF%AD%E6%B3%95&#x2F;index.html">
+<meta property="og:title" content="Context源码分析">
+<meta property="og:url" content="http:&#x2F;&#x2F;blog.jiangyang.me&#x2F;2022&#x2F;04&#x2F;09&#x2F;Golang&#x2F;Context&#x2F;index.html">
 <meta property="og:site_name" content="孤独的风中一匹狼">
-<meta property="og:description" content="Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。Markdown 语言在 2004 由约翰·格鲁伯（英语：John Gruber）创建。Markdown 编写的文档可以导出 HTML 、Word、图像、PDF、Epub 等多种格式的文档。Markdown 编写的文档后缀为 .md, .markdown。">
+<meta property="og:description" content="Go语言中Context携带截止日期、取消信号以及跨API边界和进程之间的其他请求作用域值，用来同步信号，设置超时时间，传递请求相关值等。Context接口定义12345678910type Context interface &amp;#123;      &#x2F;&#x2F; 返回上下文的截止日期   Deadline() (deadline time.Time, ok bool)   &#x2F;&#x2F; 返回一个channel，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http:&#x2F;&#x2F;static.runoob.com&#x2F;images&#x2F;runoob-logo.png">
-<meta property="og:image" content="http:&#x2F;&#x2F;static.runoob.com&#x2F;images&#x2F;runoob-logo.png">
-<meta property="og:updated_time" content="2020-03-01T04:34:09.567Z">
+<meta property="og:updated_time" content="2022-04-08T16:38:53.763Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http:&#x2F;&#x2F;static.runoob.com&#x2F;images&#x2F;runoob-logo.png">
 
-<link rel="canonical" href="http://blog.jiangyang.me/2019/10/30/Tool/Markdown%E8%AF%AD%E6%B3%95/">
+<link rel="canonical" href="http://blog.jiangyang.me/2022/04/09/Golang/Context/">
 
 
 <script id="page-configurations">
@@ -80,7 +77,7 @@
   };
 </script>
 
-  <title>Markdown语法 | 孤独的风中一匹狼</title>
+  <title>Context源码分析 | 孤独的风中一匹狼</title>
   
 
 
@@ -219,7 +216,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2019/10/30/Tool/Markdown%E8%AF%AD%E6%B3%95/">
+    <link itemprop="mainEntityOfPage" href="http://blog.jiangyang.me/2022/04/09/Golang/Context/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/logo.jpeg">
@@ -232,7 +229,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Markdown语法
+          Context源码分析
         </h1>
 
         <div class="post-meta">
@@ -241,26 +238,9 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2019-10-30 22:34:13" itemprop="dateCreated datePublished" datetime="2019-10-30T22:34:13+08:00">2019-10-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-01 12:34:09" itemprop="dateModified" datetime="2020-03-01T12:34:09+08:00">2020-03-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tool/" itemprop="url" rel="index">
-                    <span itemprop="name">Tool</span>
-                  </a>
-                </span>
+              <time title="创建时间：2022-04-09 00:31:02 / 修改时间：00:38:53" itemprop="dateCreated datePublished" datetime="2022-04-09T00:31:02+08:00">2022-04-09</time>
             </span>
 
           
@@ -279,8 +259,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2019/10/30/Tool/Markdown%E8%AF%AD%E6%B3%95/#comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2019/10/30/Tool/Markdown%E8%AF%AD%E6%B3%95/" itemprop="commentCount"></span>
+    <a title="valine" href="/2022/04/09/Golang/Context/#comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2022/04/09/Golang/Context/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -290,14 +270,14 @@
                 <i class="fa fa-file-word-o"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>922</span>
+              <span>1.8k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="fa fa-clock-o"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>2 分钟</span>
             </span>
 
         </div>
@@ -309,91 +289,58 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。</p><p>Markdown 语言在 2004 由约翰·格鲁伯（英语：John Gruber）创建。</p><p>Markdown 编写的文档可以导出 HTML 、Word、图像、PDF、Epub 等多种格式的文档。</p><p>Markdown 编写的文档后缀为 .md, .markdown。</p><a id="more"></a>
+        <p>Go语言中Context携带截止日期、取消信号以及跨API边界和进程之间的其他请求作用域值，用来同步信号，设置超时时间，传递请求相关值等。</p><h3 id="Context接口定义"><a href="#Context接口定义" class="headerlink" title="Context接口定义"></a>Context接口定义</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Context <span class="keyword">interface</span> &#123;    </span><br><span class="line">  <span class="comment">// 返回上下文的截止日期 </span></span><br><span class="line">  Deadline() (deadline time.Time, ok <span class="keyword">bool</span>) </span><br><span class="line">  <span class="comment">// 返回一个channel，这个channel在工作完成会在上下文被取消时会被close </span></span><br><span class="line">  Done() &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125; </span><br><span class="line">  <span class="comment">// 返回上下文结束的错误原因 </span></span><br><span class="line">  Err() error </span><br><span class="line">  <span class="comment">// 从上下文中获取值 </span></span><br><span class="line">  Value(key any) any </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><a id="more"></a>
 
 
-
-<h3 id="工具选择"><a href="#工具选择" class="headerlink" title="工具选择"></a>工具选择</h3><p>Typora 官网：<a href="https://typora.io/" target="_blank" rel="noopener">https://typora.io/</a><br>在线编辑器：<a href="https://c.runoob.com/front-end/712" target="_blank" rel="noopener">https://c.runoob.com/front-end/712</a></p>
-<h3 id="语法部分"><a href="#语法部分" class="headerlink" title="语法部分"></a>语法部分</h3><h4 id="标题"><a href="#标题" class="headerlink" title="标题"></a>标题</h4><p>使用#可以表示1-6级标题</p>
-<h4 id="段落格式"><a href="#段落格式" class="headerlink" title="段落格式"></a>段落格式</h4><p>使用两个空格加回车或者一个空行来表示段落</p>
-<p>斜体文本：*斜体*</p>
-<p><em>斜体</em></p>
-<p>粗体文本：**粗体**</p>
-<p><strong>粗体</strong></p>
-<p>斜粗体文本：***斜粗体***</p>
-<p><strong><em>斜粗体</em></strong></p>
-<p>分割线：三个以上的 *（星号） 或者 -（减号） 或者 __（下划线）</p>
-<hr>
-<hr>
-<hr>
-<p>删除线：~~被删除的文字~~</p>
-<p><del>被删了，啊啊啊啊</del></p>
-<p>脚注：[^文本]     [^文本]:这里是脚注内容</p>
-<p>创建脚注合适类似这样<a href="这里是在后面定义的脚注内容">^文本</a></p>
-<h4 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h4><p>无序列表：使用*，+，- 作为列表标记</p>
-<ul>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
-</ul>
-<p>有序列表：使用数字加上点（.）</p>
-<ol>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
-</ol>
-<p>列表嵌套：只需在子列表中添加中横线（-）</p>
-<ol>
-<li>第一项<ul>
-<li>第一项的第一个元素</li>
-<li>第一项的第二个元素</li>
-</ul>
-</li>
-<li>第二项</li>
-</ol>
-<h4 id="区块"><a href="#区块" class="headerlink" title="区块"></a>区块</h4><p>使用&gt;符号后面紧跟一个空格</p>
+<h3 id="Context类型"><a href="#Context类型" class="headerlink" title="Context类型"></a>Context类型</h3><h4 id="cancelCtx"><a href="#cancelCtx" class="headerlink" title="cancelCtx"></a>cancelCtx</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> cancelCtx <span class="keyword">struct</span> &#123;   </span><br><span class="line">  <span class="comment">// 父级上下文   </span></span><br><span class="line">  Context   </span><br><span class="line">  <span class="comment">// 用于保护下面字段的互斥锁   </span></span><br><span class="line">  mu       sync.Mutex   </span><br><span class="line">  <span class="comment">// 用于通知上下文cancel的channel，首次cancel时被close              </span></span><br><span class="line">  done     atomic.Value   </span><br><span class="line">  <span class="comment">// 子context集合，首次cancel时设置为nil            </span></span><br><span class="line">  children <span class="keyword">map</span>[canceler]<span class="keyword">struct</span>&#123;&#125;    </span><br><span class="line">  <span class="comment">// 上下文cancel原因，首次调用cancel时设置值   </span></span><br><span class="line">  err      error                  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>这是区块内容  </p>
+<p>cancelCtx的创建过程</p>
 </blockquote>
-<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><p>```go</p>
-<p>这里是代码</p>
-<p>```</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> golang <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>创建一个cancelCtx结构体，将父上下文包在结构体内</p>
+</li>
+<li><p>如果父上下文不具备取消功能（done==nil），就直接返回cancelCtx和cancel()回调函数</p>
+</li>
+<li><p>如果父上下文已经被取消，就取消掉当前上下文（cancelCtx）然后返回</p>
+</li>
+<li><p>找到父上下文底层cancelCtx</p>
+</li>
+<li><p>查找父上下文底层cancelCtx的过程</p>
+<pre><code>1. 查找父上下文最近一个实现了Done方法的底层上下文，包括父上下文自己；如果已经取消，则取消当前上下文；如果不具备取消功能（done==nil），启动协程监听当前上下文取消事件</code></pre><ol start="2">
+<li>查找父上下文最近一个cancelCtx类型的底层上下文，包括父上下文自己；如果没有则返回false</li>
+<li>通过检查两次查找的底层上下文done是否相等来判断查找到的是否为同一上下文，如果不同则返回false，相同就返回底层上下文的指针</li>
+<li>也就是说，如果自定义Context类型覆盖了父级的Done方法并且返回了非空的done，就返回false创建一个协程监听父上下文和当前创建的cancelCtx的取消操作，因为自定义Context类型没办法将自己放入自己的cancelCtx类型父上下文的children集合里，无法保证级联取消的连续性，所以这里需要创建一个协程来监听父子上下文。</li>
+</ol>
+</li>
+<li><p>如果存在，则将当前创建的cancelCtx保存到父上下文底层cancelCtx的children集合里，父上下文取消时会将所有children取消；</p>
+</li>
+<li><p>如果不存在，则创建一个协程监听父上下文和当前创建的cancelCtx的取消事件，父上下文被取消时会取消掉当前创建的cancelCtx</p>
+<p>这里可以理解为：找不到有效的cancelCtx类型的父上下文，加入它的children集合接收它的取消通知，就需要为当前cancelCtx创建一个监听协程。</p>
+</li>
+</ol>
+<blockquote>
+<p>cancelCtx的取消过程</p>
+</blockquote>
+<ol>
+<li>关闭done通道，此时所有阻塞等待Done()的协程都将得到释放</li>
+<li>调用children集合所有子上下文的cancel函数</li>
+<li>主动调用cancel方法会将自己从自己的父上下文的children集合中删除掉</li>
+</ol>
+<h4 id="timeCtx"><a href="#timeCtx" class="headerlink" title="timeCtx"></a>timeCtx</h4><p>通过在cancelCtx的基础上加上定时cancel实现</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> timerCtx <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 父上下文   </span></span><br><span class="line">	cancelCtx   </span><br><span class="line">	<span class="comment">// 定时执行cancel   </span></span><br><span class="line">	timer *time.Timer   </span><br><span class="line">	<span class="comment">// 最后期限   </span></span><br><span class="line">	deadline time.Time </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h4><p>[这是链接内容](<a href="https://www.baidu.com" target="_blank" rel="noopener">https://www.baidu.com</a>)</p>
-<p><a href="https://www.baidu.com" target="_blank" rel="noopener">这是链接内容</a></p>
-<p>高级链接</p>
-<p>这个链接用google作为网址变量[Google][google]</p>
-<p>[google]:<a href="http://www.google.com" target="_blank" rel="noopener">http://www.google.com</a></p>
-<p>这个链接用google作为网址变量<a href="http://www.google.com" target="_blank" rel="noopener">Google</a></p>
-<h4 id="图片"><a href="#图片" class="headerlink" title="图片"></a>图片</h4><p>![RUNOOB 图标](<a href="http://static.runoob.com/images/runoob-logo.png" target="_blank" rel="noopener">http://static.runoob.com/images/runoob-logo.png</a> “RUNOOB”)</p>
-<p><img src="http://static.runoob.com/images/runoob-logo.png" alt="RUNOOB 图标" title="RUNOOB"></p>
-<p><img src="http://static.runoob.com/images/runoob-logo.png" alt="myImg" title="title"></p>
-<h4 id="表格"><a href="#表格" class="headerlink" title="表格"></a>表格</h4><p>使用|分割列没使用-分割行</p>
-<p>左对齐：:-</p>
-<p>右对齐：-:</p>
-<p>居中对齐：:-:</p>
-<p>|表头1|表头2|表头3|</p>
-<p>|:-:|:-|-:|</p>
-<p>|1|2|3|</p>
-<table>
-<thead>
-<tr>
-<th align="center">表头1</th>
-<th align="left">表头2</th>
-<th align="right">表头2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">1</td>
-<td align="left">2</td>
-<td align="right">3</td>
-</tr>
-</tbody></table>
-<h4 id="高级技巧"><a href="#高级技巧" class="headerlink" title="高级技巧"></a>高级技巧</h4><p>markdown支持反斜杠转义</p>
-<p>markdown支持众多html元素</p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>菜鸟教程 <a href="https://www.runoob.com/markdown/md-tutorial.html" target="_blank" rel="noopener">https://www.runoob.com/markdown/md-tutorial.html</a></p>
+<h4 id="valueCtx"><a href="#valueCtx" class="headerlink" title="valueCtx"></a>valueCtx</h4><p>通过在上下文中包裹 k、v 键值对实现</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> valueCtx <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// 父上下文</span></span><br><span class="line">	Context</span><br><span class="line">	<span class="comment">// 键值对</span></span><br><span class="line">	key, val any</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>valueCtx通过key取值的过程</p>
+</blockquote>
+<ol>
+<li>首先比较当前上下文的key是否与目标一致</li>
+<li>然后逐层查找父上下文及其底层上下文的key是否匹配，直到最底层</li>
+</ol>
+<h3 id="emptyCtx"><a href="#emptyCtx" class="headerlink" title="emptyCtx"></a>emptyCtx</h3><p>系统默认的空上下文</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> (</span><br><span class="line">	background = <span class="built_in">new</span>(emptyCtx)</span><br><span class="line">	todo       = <span class="built_in">new</span>(emptyCtx)</span><br><span class="line">) </span><br><span class="line"><span class="keyword">type</span> emptyCtx <span class="keyword">int</span></span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -410,24 +357,21 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Markdown/" rel="tag"><i class="fa fa-tag"></i> Markdown</a>
+              <a href="/tags/GO/" rel="tag"><i class="fa fa-tag"></i> GO</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2019/10/30/Book/%E7%9A%AE%E5%9B%8A/" rel="next" title="皮囊">
-                  <i class="fa fa-chevron-left"></i> 皮囊
+                <a href="/2022/03/19/Tool/Protobuf/" rel="next" title="Protobuf编码">
+                  <i class="fa fa-chevron-left"></i> Protobuf编码
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2019/10/31/Tool/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/" rel="prev" title="正则表达式">
-                  正则表达式 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -467,7 +411,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#工具选择"><span class="nav-number">1.</span> <span class="nav-text">工具选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语法部分"><span class="nav-number">2.</span> <span class="nav-text">语法部分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标题"><span class="nav-number">2.1.</span> <span class="nav-text">标题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#段落格式"><span class="nav-number">2.2.</span> <span class="nav-text">段落格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#列表"><span class="nav-number">2.3.</span> <span class="nav-text">列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#区块"><span class="nav-number">2.4.</span> <span class="nav-text">区块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码"><span class="nav-number">2.5.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#链接"><span class="nav-number">2.6.</span> <span class="nav-text">链接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图片"><span class="nav-number">2.7.</span> <span class="nav-text">图片</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#表格"><span class="nav-number">2.8.</span> <span class="nav-text">表格</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#高级技巧"><span class="nav-number">2.9.</span> <span class="nav-text">高级技巧</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Context接口定义"><span class="nav-number">1.</span> <span class="nav-text">Context接口定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context类型"><span class="nav-number">2.</span> <span class="nav-text">Context类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#cancelCtx"><span class="nav-number">2.1.</span> <span class="nav-text">cancelCtx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#timeCtx"><span class="nav-number">2.2.</span> <span class="nav-text">timeCtx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#valueCtx"><span class="nav-number">2.3.</span> <span class="nav-text">valueCtx</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emptyCtx"><span class="nav-number">3.</span> <span class="nav-text">emptyCtx</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
