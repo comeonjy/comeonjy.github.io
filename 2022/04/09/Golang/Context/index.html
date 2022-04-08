@@ -60,7 +60,7 @@
 <meta property="og:site_name" content="孤独的风中一匹狼">
 <meta property="og:description" content="Go语言中Context携带截止日期、取消信号以及跨API边界和进程之间的其他请求作用域值，用来同步信号，设置超时时间，传递请求相关值等。Context接口定义12345678910type Context interface &amp;#123;      &#x2F;&#x2F; 返回上下文的截止日期   Deadline() (deadline time.Time, ok bool)   &#x2F;&#x2F; 返回一个channel，">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-04-08T16:38:53.763Z">
+<meta property="og:updated_time" content="2022-04-08T16:43:34.922Z">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://blog.jiangyang.me/2022/04/09/Golang/Context/">
@@ -240,7 +240,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-04-09 00:31:02 / 修改时间：00:38:53" itemprop="dateCreated datePublished" datetime="2022-04-09T00:31:02+08:00">2022-04-09</time>
+              <time title="创建时间：2022-04-09 00:31:02 / 修改时间：00:43:34" itemprop="dateCreated datePublished" datetime="2022-04-09T00:31:02+08:00">2022-04-09</time>
             </span>
 
           
@@ -306,10 +306,13 @@
 <li><p>找到父上下文底层cancelCtx</p>
 </li>
 <li><p>查找父上下文底层cancelCtx的过程</p>
-<pre><code>1. 查找父上下文最近一个实现了Done方法的底层上下文，包括父上下文自己；如果已经取消，则取消当前上下文；如果不具备取消功能（done==nil），启动协程监听当前上下文取消事件</code></pre><ol start="2">
+<ol>
+<li>查找父上下文最近一个实现了Done方法的底层上下文，包括父上下文自己；如果已经取消，则取消当前上下文；如果不具备取消功能（done==nil），启动协程监听当前上下文取消事件<ol start="2">
 <li>查找父上下文最近一个cancelCtx类型的底层上下文，包括父上下文自己；如果没有则返回false</li>
 <li>通过检查两次查找的底层上下文done是否相等来判断查找到的是否为同一上下文，如果不同则返回false，相同就返回底层上下文的指针</li>
 <li>也就是说，如果自定义Context类型覆盖了父级的Done方法并且返回了非空的done，就返回false创建一个协程监听父上下文和当前创建的cancelCtx的取消操作，因为自定义Context类型没办法将自己放入自己的cancelCtx类型父上下文的children集合里，无法保证级联取消的连续性，所以这里需要创建一个协程来监听父子上下文。</li>
+</ol>
+</li>
 </ol>
 </li>
 <li><p>如果存在，则将当前创建的cancelCtx保存到父上下文底层cancelCtx的children集合里，父上下文取消时会将所有children取消；</p>
